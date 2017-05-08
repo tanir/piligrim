@@ -1,0 +1,29 @@
+﻿
+.dropdown-submenu {
+    position: relative;
+}
+
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -6px;
+        margin-left: -1px;
+        box-shadow: none;
+    }
+
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+    }
+
+.menu-item {
+    border: 1px solid transparent;
+    text-align: center;
+}
+
+    .menu-item:hover {
+        border: 1px solid #ccc;
+    }
+
+    .nav li.menu-item a:hover {
+        background-color: transparent;
+    }

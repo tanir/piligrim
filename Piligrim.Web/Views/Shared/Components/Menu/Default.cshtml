@@ -1,0 +1,22 @@
+@model MenuViewModel
+
+<ul class="nav nav-stacked">
+    @foreach(var item in Model.Categories)
+    {
+        <li class="menu-item dropdown-submenu">
+            <a href="#">@item.Title</a>
+
+            @if(item.HasChild)
+            {
+                <ul class="dropdown-menu nav nav-stacked">
+                    @foreach(var menuItem in item.MenuItems)
+                    {
+                        <li class="menu-item">
+                            <a href="@menuItem.Url">@menuItem.Title</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>

@@ -1,0 +1,80 @@
+﻿@model ProductDetailsViewModel
+<div class="container-fluid product-details">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="fotorama" data-nav="thumbs">
+                        <img src="@Model.Thumbnail">
+
+                        @foreach (var photo in Model.Photos)
+                        {
+                            <img src="@photo"/>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <h3>Описание</h3>
+                    <p>
+                        @Model.Description
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+
+            <h1>@Model.Title</h1>
+            <h2><span class="label label-danger">@Model.Price.ToString("G") <span class="fa fa-rub"></span></span></h2>
+
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-4 text-left">Размер</label>
+                    <div class="col-sm-8">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Выберите размер <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var size in Model.Sizes)
+                                {
+                                    <li><a href="#">@size</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Цвет</label>
+                    <div class="col-sm-8">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Выберите цвет <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var color in Model.Colors)
+                                {
+                                    <li><a href="#">@color</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Количество</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <span class="input-group-addon btn"><span class="glyphicon glyphicon-minus"></span> </span>
+                            <input type="text" class="form-control" />
+                            <span class="input-group-addon btn"><span class="glyphicon glyphicon-plus"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-10">
+                        <button type="submit" class="btn btn-danger btn-lg">Добавить в корзину</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

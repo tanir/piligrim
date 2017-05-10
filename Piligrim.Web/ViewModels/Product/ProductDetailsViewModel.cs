@@ -4,6 +4,8 @@ namespace Piligrim.Web.ViewModels.Product
 {
     public class ProductDetailsViewModel
     {
+        public int Id { get; set; }
+
         public string Title { get; set; }
 
         public decimal Price { get; set; }

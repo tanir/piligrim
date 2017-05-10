@@ -35,6 +35,7 @@ namespace Piligrim.Web.Controllers
 
             var model = new ProductDetailsViewModel
             {
+                Id = product.Id,
                 Colors = product.Colors.Select(x => x.Value).ToList(),
                 Title = product.Title,
                 Description = product.Description,

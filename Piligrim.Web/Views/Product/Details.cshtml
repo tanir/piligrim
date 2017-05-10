@@ -5,11 +5,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="fotorama" data-nav="thumbs">
-                        <img src="@Model.Thumbnail">
+                        <img src="@Model.Thumbnail" alt="@Model.Title"/>
 
                         @foreach (var photo in Model.Photos)
                         {
-                            <img src="@photo"/>
+                            <img src="@photo" alt="@Model.Title" />
                         }
                     </div>
                 </div>
@@ -26,13 +26,16 @@
             <h1>@Model.Title</h1>
             <h2><span class="label label-danger">@Model.Price.ToString("G") <span class="fa fa-rub"></span></span></h2>
 
-            <form class="form-horizontal">
+            <form class="form-horizontal product-form">
+                <input type="hidden" data-field="thumbnail" data-value="@Model.Thumbnail" />
+                <input type="hidden" data-field="id" data-value="@Model.Id" />
+                <input type="hidden" data-field="price" data-value="@Model.Price" />
                 <div class="form-group">
                     <label class="control-label col-sm-4 text-left">Размер</label>
                     <div class="col-sm-8">
-                        <div class="btn-group">
+                        <div class="btn-group picker" data-field="size">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                Выберите размер <span class="caret"></span>
+                                <span class="picker-title">Выберите размер</span> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 @foreach (var size in Model.Sizes)
@@ -46,9 +49,9 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4">Цвет</label>
                     <div class="col-sm-8">
-                        <div class="btn-group">
+                        <div class="btn-group picker" data-field="color">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                Выберите цвет <span class="caret"></span>
+                                <span class="picker-title">Выберите цвет</span> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 @foreach (var color in Model.Colors)
@@ -62,10 +65,10 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4">Количество</label>
                     <div class="col-sm-8">
-                        <div class="input-group">
-                            <span class="input-group-addon btn"><span class="glyphicon glyphicon-minus"></span> </span>
-                            <input type="text" class="form-control" />
-                            <span class="input-group-addon btn"><span class="glyphicon glyphicon-plus"></span></span>
+                        <div class="input-group count-picker" data-value="1" data-field="count">
+                            <span class="input-group-addon btn" data-increment="-1"><span class="glyphicon glyphicon-minus"></span> </span>
+                            <input type="text" class="form-control" value="1"/>
+                            <span class="input-group-addon btn" data-increment="1"><span class="glyphicon glyphicon-plus"></span></span>
                         </div>
                     </div>
                 </div>
@@ -78,3 +81,8 @@
         </div>
     </div>
 </div>
+
+@section head
+{
+    <script src="~/js/details.js" asp-append-version="true"></script>
+}

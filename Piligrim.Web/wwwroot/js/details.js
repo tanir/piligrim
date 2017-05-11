@@ -34,7 +34,7 @@
 
             $countPicker.data("value", value);
 
-            $this.val(value);
+            $input.val(value);
         });
 
     $(".product-form").on("submit",

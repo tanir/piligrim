@@ -59,8 +59,8 @@
             if (hasError) {
                 return;
             }
-            
-            $(window).trigger("order:new", order);
+
+            window.sharedOrder.addOrderItem(order);
         });
 
 })

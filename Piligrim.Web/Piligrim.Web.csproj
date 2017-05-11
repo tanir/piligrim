@@ -7,11 +7,15 @@
 
   <ItemGroup>
     <Content Include="wwwroot\css\site.css" />
+    <Content Include="wwwroot\js\cart.js" />
     <Content Include="wwwroot\js\details.js" />
+    <Content Include="wwwroot\js\order.js" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
+    <Folder Include="Views\Cart\" />
+    <Folder Include="Views\Shared\Components\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />

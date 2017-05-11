@@ -1,0 +1,101 @@
+﻿<div class="container-fluid cart">
+    <h1>Моя корзина</h1>
+    <form class="form">
+        <div class="row">
+            <div class="table-responsive cart-list">
+                <table class="table table-hover order-list">
+                    <thead>
+                        <tr>
+                            <th>Товар</th>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                            <th>Итого</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: items">
+                        <tr>
+                            <td>
+                                <img data-bind="attr: { src: thumbnail, alt: title}" />
+                            </td>
+                            <td>
+                                <span data-bind="text: title"></span> <br />
+                                Цвет: <b data-bind="text: color"></b> <br />
+                                Размер: <b data-bind="text: size"></b>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon btn"><span class="glyphicon glyphicon-minus"></span> </span>
+                                    <input type="text" class="form-control" data-bind="attr: {value: count}" />
+                                    <span class="input-group-addon btn"><span class="glyphicon glyphicon-plus"></span></span>
+                                </div>
+                            </td>
+                            <td>
+                                <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
+                            </td>
+                            <td>
+                                <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row order-form">
+            <div class="col-sm-6 customer-details">
+                <h4>Ваши данные</h4>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Email" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Телефон" />
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Адрес доставки" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Комментарий к заказу" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h4>Доставка</h4>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="delivery" value="option1" checked>
+                        Самовывоз
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="delivery" value="option2">
+                        Курьерской службой
+                    </label>
+                </div>
+                <h4>Оплата</h4>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="payment" value="option1" checked>
+                        Оплата по реквизитам
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="payment" value="option2">
+                        При получении
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row total">
+            <div class="text-right">
+                <p class="total"><b>Итого: 1 245 <span class="fa fa-rub"></span></b></p>
+                <button type="submit" class="btn btn-danger btn-lg">Оформить заказ</button>
+            </div>
+        </div>
+    </form>
+
+    @section head
+    {
+        <script src="~/js/order.js" asp-append-version="true"></script>
+    }
+</div>

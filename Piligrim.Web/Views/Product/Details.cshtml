@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="fotorama" data-nav="thumbs">
-                        <img src="@Model.Thumbnail" alt="@Model.Title"/>
+                        <img src="@Model.Thumbnail" alt="@Model.Title" />
 
                         @foreach (var photo in Model.Photos)
                         {
@@ -26,50 +26,42 @@
             <h1>@Model.Title</h1>
             <h2><span class="label label-danger">@Model.Price.ToString("G") <span class="fa fa-rub"></span></span></h2>
 
-            <form class="form-horizontal product-form">
-                <input type="hidden" data-field="thumbnail" data-value="@Model.Thumbnail" />
-                <input type="hidden" data-field="id" data-value="@Model.Id" />
-                <input type="hidden" data-field="price" data-value="@Model.Price" />
-                <input type="hidden" data-field="title" data-value="@Model.Title" />
+            <form class="form-horizontal" data-bind="submit: addOrderItem">
+                <input type="hidden" name="thumbnail" value="@Model.Thumbnail" />
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="price" value="@Model.Price" />
+                <input type="hidden" name="title" value="@Model.Title" />
                 <div class="form-group">
                     <label class="control-label col-sm-4 text-left">Размер</label>
-                    <div class="col-sm-8">
-                        <div class="btn-group picker" data-field="size">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="picker-title">Выберите размер</span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                @foreach (var size in Model.Sizes)
-                                {
-                                    <li><a href="#">@size</a></li>
-                                }
-                            </ul>
-                        </div>
+                    <div class="col-sm-6">
+                        <select class="form-control" data-bind="value: size">
+                            <option disabled selected>Выберите размер</option>
+                            @foreach (var size in Model.Sizes)
+                            {
+                                <option value="@size">@size</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4">Цвет</label>
-                    <div class="col-sm-8">
-                        <div class="btn-group picker" data-field="color">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="picker-title">Выберите цвет</span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                @foreach (var color in Model.Colors)
-                                {
-                                    <li><a href="#">@color</a></li>
-                                }
-                            </ul>
-                        </div>
+                    <div class="col-sm-6">
+                        <select class="form-control" data-bind="value: color">
+                            <option disabled selected>Выберите цвет</option>
+                            @foreach (var color in Model.Colors)
+                            {
+                                <option value="@color">@color</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-4">Количество</label>
                     <div class="col-sm-8">
-                        <div class="input-group count-picker" data-value="1" data-field="count">
-                            <span class="input-group-addon btn" data-increment="-1"><span class="glyphicon glyphicon-minus"></span> </span>
-                            <input type="text" class="form-control" value="1"/>
-                            <span class="input-group-addon btn" data-increment="1"><span class="glyphicon glyphicon-plus"></span></span>
+                        <div class="input-group">
+                            <span class="input-group-addon btn" data-bind="click: function(){changeCount(-1)}"><span class="glyphicon glyphicon-minus"></span> </span>
+                            <input type="text" class="form-control" data-bind="value: count" />
+                            <span class="input-group-addon btn" data-bind="click: function(){changeCount(1)}"><span class="glyphicon glyphicon-plus"></span></span>
                         </div>
                     </div>
                 </div>

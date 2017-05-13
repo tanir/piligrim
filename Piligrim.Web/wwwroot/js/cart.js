@@ -1,10 +1,10 @@
 ﻿function OrderViewModel() {
     var self = this;
     var items = JSON.parse(localStorage.getItem("orderItems")) || [];
-    
+
     self.items = ko.observableArray(items);
 
-    self.count = ko.pureComputed(function() {
+    self.count = ko.pureComputed(function () {
         return self.items().length;
     });
 
@@ -25,5 +25,9 @@
 window.sharedOrder = new OrderViewModel();
 
 $(document).ready(function () {
-    ko.applyBindings(window.sharedOrder);
+    ko.applyBindings(window.sharedOrder, document.querySelector(".cart-icon"));
+    var cart = document.querySelector(".cart");
+    if (cart) {
+        ko.applyBindings(window.sharedOrder, cart);
+    }
 });

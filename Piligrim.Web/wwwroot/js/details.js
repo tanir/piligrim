@@ -1,66 +1,35 @@
 ﻿$(document).ready(() => {
-    $(".picker").on("click",
-        ".dropdown-menu a",
-        function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            var $picker = $this.closest(".picker");
-            var $title = $picker.find(".picker-title");
-            $title.text($this.text());
 
-            $picker.data("value", $this.text());
+    function AddOrderItemViewModel() {
+        var self = this;
+
+        self.count = ko.observable(1);
+        self.size = ko.observable(null);
+        self.color = ko.observable(null);
+
+        $("input[type='hidden']", ".product-details").each(function () {
+            var $this = $(this);
+            self[$this.attr('name')] = $this.val();
         });
 
-    $(".count-picker").on("click",
-        "[data-increment]",
-        function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            var $countPicker = $this.closest(".count-picker");
-            var $input = $countPicker.find("input[type='text']");
-            var currentValue = parseInt($input.val());
 
-            if (Number.isNaN(currentValue)) {
-                currentValue = 1;
-            }
+        self.changeCount = function (increment) {
+            var newValue = self.count() + increment;
 
-            var increment = parseInt($this.data("increment"));
-
-            if (currentValue + increment < 1) {
+            if (newValue < 1) {
                 return;
             }
 
-            var value = currentValue + increment;
+            self.count(newValue);
+        };
 
-            $countPicker.data("value", value);
+        self.addOrderItem = function () {
+            var newOrderItem = ko.toJS(self);
+            sharedOrder.addOrderItem(newOrderItem);
+        };
+    }
 
-            $input.val(value);
-        });
+    var model = new AddOrderItemViewModel();
 
-    $(".product-form").on("submit",
-        function (e) {
-            e.preventDefault();
-            var hasError = false;
-
-            var order = {};
-
-            $("[data-field]", $(this)).each(function (index, item) {
-                var $item = $(item);
-                var value = $item.data("value");
-                if (!value) {
-                    hasError = true;
-                    $item.closest(".form-group").addClass("has-error");
-                } else {
-                    $item.closest(".form-group").removeClass("has-error");
-                    order[$item.data("field")] = value;
-                }
-            });
-
-            if (hasError) {
-                return;
-            }
-
-            window.sharedOrder.addOrderItem(order);
-        });
-
+    ko.applyBindings(model, document.querySelector(".product-details"));
 })

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Piligrim.Core;
@@ -6,7 +6,6 @@ using Piligrim.Web.ViewModels.Product;
 
 namespace Piligrim.Web.Controllers
 {
-    [Route("/products")]
     public class ProductController : Controller
     {
         private readonly IProductRepository productRepository;
@@ -16,9 +15,14 @@ namespace Piligrim.Web.Controllers
             this.productRepository = productRepository;
         }
 
-        [Route("{category}/{parent?}/")]
+        [Route("products/{category}/{parent?}/", Order = 1)]
+        [Route("[controller]/[action]", Order = 2)]
         public async Task<IActionResult> List(string category, string search, string parent)
         {
+            var currentCategory = AvailableCategories.Categories.FirstOrDefault(x => x.Name == category);
+
+            ViewData["Title"] = search ?? (currentCategory?.Title ?? "Список товаров");
+
             var filter = new ProductFilter { SearchKeyword = search, Category = category };
 
             var products = await this.productRepository.Find(filter);
@@ -28,7 +32,7 @@ namespace Piligrim.Web.Controllers
             return this.View(model);
         }
 
-        [Route("{id:int}")]
+        [Route("products/{id:int}")]
         public async Task<IActionResult> Details(int id)
         {
             var product = await this.productRepository.Get(id);

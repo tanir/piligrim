@@ -1,4 +1,7 @@
 ﻿@model AddOrderViewModel
+@{
+    ViewData["Title"] = "Моя корзина";
+}
 <div class="container-fluid cart">
     <h1>Моя корзина</h1>
     <form asp-action="CreateOrder" class="form" method="post">
@@ -6,44 +9,44 @@
             <div class="table-responsive cart-list">
                 <table class="table table-hover order-list">
                     <thead>
-                    <tr>
-                        <th>Товар</th>
-                        <th>Наименование</th>
-                        <th>Количество</th>
-                        <th>Итого</th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>Товар</th>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                            <th>Итого</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody data-bind="foreach: items">
-                    <tr>
-                        <td>
-                            <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Id')}, value: id" />
-                            <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Color')}, value: color" />
-                            <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Size')}, value: size" />
-                            <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Price')}, value: price" />
-                            <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Count')}, value: count" />
+                        <tr>
+                            <td>
+                                <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Id')}, value: id" />
+                                <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Color')}, value: color" />
+                                <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Size')}, value: size" />
+                                <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Price')}, value: price" />
+                                <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Count')}, value: count" />
 
-                            <img data-bind="attr: { src: thumbnail, alt: title}" />
-                        </td>
-                        <td>
-                            <span data-bind="text: title"></span> <br />
-                            Цвет: <b data-bind="text: color"></b> <br />
-                            Размер: <b data-bind="text: size"></b>
-                        </td>
-                        <td>
-                            <div class="input-group icrementer">
-                                <span class="input-group-addon btn" data-bind="click: $parent.decrement"><span class="glyphicon glyphicon-minus"></span> </span>
-                                <input type="text" class="form-control" data-bind="value: count" />
-                                <span class="input-group-addon btn" data-bind="click: $parent.increment"><span class="glyphicon glyphicon-plus"></span></span>
-                            </div>
-                        </td>
-                        <td>
-                            <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
-                        </td>
-                        <td>
-                            <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                        </td>
-                    </tr>
+                                <img data-bind="attr: { src: thumbnail, alt: title}" />
+                            </td>
+                            <td>
+                                <span data-bind="text: title"></span> <br />
+                                Цвет: <b data-bind="text: color"></b> <br />
+                                Размер: <b data-bind="text: size"></b>
+                            </td>
+                            <td>
+                                <div class="input-group icrementer">
+                                    <span class="input-group-addon btn" data-bind="click: $parent.decrement"><span class="glyphicon glyphicon-minus"></span> </span>
+                                    <input type="text" class="form-control" data-bind="value: count" />
+                                    <span class="input-group-addon btn" data-bind="click: $parent.increment"><span class="glyphicon glyphicon-plus"></span></span>
+                                </div>
+                            </td>
+                            <td>
+                                <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
+                            </td>
+                            <td>
+                                <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

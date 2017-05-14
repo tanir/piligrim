@@ -46,3 +46,6 @@
 .icrementer input[type="text"] {
     width: 42px;
 }
+.navbar-right {
+    margin-right: 0px;
+}

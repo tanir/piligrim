@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Piligrim</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css" />
@@ -27,14 +28,17 @@
                     <div class="navbar-header">
                         <a class="navbar-brand" href="/"><b>PILIGRIM</b></a>
                     </div>
-                    <form class="navbar-form navbar-right">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Поиск">
-                        </div>
-                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                        @await Component.InvokeAsync("CartIcon")
-                    </form>
 
+                    <div class="navbar-right">
+                        <a asp-action="Index" asp-controller="Cart" class="btn btn-default navbar-btn cart-icon">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            <span class="badge" data-bind="{text: count}"></span>
+                        </a>
+                    </div>
+
+                    <div class="navbar-right">
+                        @await Component.InvokeAsync("Search")
+                    </div>
                 </div>
             </nav>
         </header>
@@ -51,16 +55,16 @@
                 <div class="container-fluid">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="#"><span class="fa fa-shopping-cart"></span> Как сделать заказ</a>
+                            <a asp-controller="Content" asp-action="Index" asp-route-page="kak-sdelat-zakaz"><span class="fa fa-shopping-cart"></span> Как сделать заказ</a>
                         </li>
                         <li>
-                            <a href="#"><span class="fa fa-credit-card"></span> Как оплатить товар</a>
+                            <a asp-controller="Content" asp-action="Index" asp-route-page="kak-oplatit-zakaz"><span class="fa fa-credit-card"></span> Как оплатить товар</a>
                         </li>
                         <li>
-                            <a href="#"><span class="fa fa-truck"></span> Доставка</a>
+                            <a asp-controller="Content" asp-action="Index" asp-route-page="dostavka"><span class="fa fa-truck"></span> Доставка</a>
                         </li>
                         <li>
-                            <a href="#"><span class="fa fa-info"></span> О нас</a>
+                            <a asp-controller="Content" asp-action="Index" asp-route-page="o-nas"><span class="fa fa-info"></span> О нас</a>
                         </li>
 
                     </ul>

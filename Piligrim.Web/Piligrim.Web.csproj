@@ -17,7 +17,7 @@
   <ItemGroup>
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Cart\" />
-    <Folder Include="Views\Shared\Components\CartIcon\" />
+    <Folder Include="Views\Shared\Components\Search\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />

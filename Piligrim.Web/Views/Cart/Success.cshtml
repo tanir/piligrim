@@ -1,0 +1,13 @@
+﻿@model SuccessViewModel
+<div class="alert alert-success">
+    <p>
+        Ваш заказ успешно отправлен. С вами свяжутся наши сотрудники.
+        Номер заказа: <b>@Model.OrderId</b
+    </p>
+</div>
+
+<script>
+    $(document).ready(function () {
+        sharedOrder.destroy();
+    });
+</script>

@@ -45,9 +45,9 @@ namespace Piligrim.Data
                     },
                     Photos = new List<Photo>
                     {
-                        new Photo {Uri = $"http://lorempixel.com/200/250/nature/?{Guid.NewGuid()}"}
+                        new Photo {Uri = $"http://lorempixel.com/1024/768/nature/?{Guid.NewGuid()}"}
                     },
-                    Thumbnail = $"http://lorempixel.com/200/250/nature/?{Guid.NewGuid()}"
+                    Thumbnail = $"http://lorempixel.com/1024/768/nature/?{Guid.NewGuid()}"
                 });
             }
 

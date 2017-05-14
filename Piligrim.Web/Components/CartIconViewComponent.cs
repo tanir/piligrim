@@ -2,7 +2,7 @@
 
 namespace Piligrim.Web.Components
 {
-    public class CartViewComponent:ViewComponent
+    public class CartIconViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke()
         {

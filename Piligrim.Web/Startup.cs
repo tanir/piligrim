@@ -30,6 +30,8 @@ namespace Piligrim.Web
             services.AddProductsDbContext(this.Configuration.GetConnectionString("products-db"));
 
             services.AddSingleton<IProductRepository, ProductRepository>();
+
+            services.AddSingleton<IOrdersRepository, OrdersRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

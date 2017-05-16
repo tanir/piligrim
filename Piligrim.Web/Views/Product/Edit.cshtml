@@ -1,0 +1,63 @@
+﻿@model EditProductViewModel
+
+<h1>Редактирование продукта</h1>
+<form class="form-horizontal edit-product" method="post" asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label class="control-label col-sm-4">Название</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Доступные цвета</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Colors" placeholder="Вводите через точку с запятой" />
+            <span asp-validation-for="Colors" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Доступные размеры</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Colors" placeholder="Вводите через точку с запятой" />
+            <span asp-validation-for="Sizes" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Цена</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Price" placeholder="Например 250.10" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Тамбнейл</label>
+        <div class="col-sm-8">
+            <img src="@Model.Thumbnail" alt="@Model.Title" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Фотографии</label>
+        <div class="col-sm-8">
+            <div class="table-responsive">
+                <table class="table">
+                    @foreach (var photo in Model.Photos)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@photo" alt="@Model.Title" />
+                            </td>
+                            <td>
+                                <a asp-action="DeletePhoto" asp-route-productId="@Model.Id" asp-route-photoUri="@photo">Удалить</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <a asp-action="Upload" asp-route-productId="@Model.Id">Добавить фотографии или заменить тамбнейл</a>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+</form>
+

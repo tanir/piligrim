@@ -53,5 +53,16 @@ namespace Piligrim.Data
                 .Include(x => x.Photos)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public Task Create(Product product)
+        {
+            return this.dbContext.Products.AddAsync(product);
+        }
+
+        public Task Update(Product product)
+        {
+            this.dbContext.Products.Update(product);
+            return this.dbContext.SaveChangesAsync();
+        }
     }
 }

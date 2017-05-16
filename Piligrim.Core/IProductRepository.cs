@@ -9,5 +9,9 @@ namespace Piligrim.Core
         Task<IEnumerable<Product>> Find(ProductFilter filter);
 
         Task<Product> Get(int id);
+
+        Task Create(Product product);
+
+        Task Update(Product product);
     }
 }

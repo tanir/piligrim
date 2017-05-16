@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Piligrim.Web.ViewModels.Product
 {
-    public class EditProductViewModel
+    public class CreateOrEditProductViewModel
     {
-        [Required]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -20,7 +19,13 @@ namespace Piligrim.Web.ViewModels.Product
         [Required]
         public decimal Price { get; set; }
 
-        public IEnumerable<string> Photos { get; set; }
+        [Required]
+        public string Category { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        public List<string> Photos { get; set; }
 
         public string Thumbnail { get; set; }
     }

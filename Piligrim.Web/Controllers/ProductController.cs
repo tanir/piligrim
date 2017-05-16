@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Packaging;
 using Piligrim.Core;
 using Piligrim.Core.Models;
@@ -25,13 +26,14 @@ namespace Piligrim.Web.Controllers
             this.env = env;
         }
 
-        [Route("products/{category}/{parent?}/", Order = 1)]
-        [Route("[controller]/[action]", Order = 2)]
+        [Route("products/{parent}/{category}/", Order = 1)]
+        [Route("products/{category}/", Order = 2)]
+        [Route("[controller]/[action]", Order = 3)]
         public async Task<IActionResult> List(string category, string search, string parent)
         {
             var currentCategory = AvailableCategories.Categories.FirstOrDefault(x => x.Name == category);
 
-            ViewData["Title"] = search ?? (currentCategory?.Title ?? "Список товаров");
+            this.ViewData["Title"] = search ?? (currentCategory?.Title ?? "Список товаров");
 
             var filter = new ProductFilter { SearchKeyword = search, Category = category };
 
@@ -42,7 +44,7 @@ namespace Piligrim.Web.Controllers
             return this.View(model);
         }
 
-        [Route("products/{id:int}")]
+        [Route("product/{id:int}")]
         public async Task<IActionResult> Details(int id)
         {
             var product = await this.productRepository.Get(id);
@@ -56,46 +58,83 @@ namespace Piligrim.Web.Controllers
                 Price = product.Price,
                 Photos = product.Photos.Select(x => x.Uri).ToList(),
                 Sizes = product.Sizes.Select(x => x.Value).ToList(),
-                Thumbnail = product.Thumbnail
+                Thumbnail = product.Thumbnail,
+                Deleted = product.Deleted
             };
 
             return this.View(model);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateOrEdit(int? id)
         {
-            return this.View(new CreateProductViewModel());
+            CreateOrEditProductViewModel model;
+
+            if (id.HasValue)
+            {
+                var product = await this.productRepository.Get(id.Value).ConfigureAwait(false);
+
+                model = new CreateOrEditProductViewModel
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    Colors = string.Join(";", product.Colors.Select(x => x.Value)),
+                    Sizes = string.Join(";", product.Sizes.Select(x => x.Value)),
+                    Price = product.Price,
+                    Thumbnail = product.Thumbnail,
+                    Photos = product.Photos?.Select(x => x.Uri).ToList() ?? new List<string>(),
+                    Category = product.Category,
+                    Description = product.Description
+                };
+            }
+            else
+            {
+                model = new CreateOrEditProductViewModel();
+            }
+
+            this.ViewBag.Categories = new SelectList(AvailableCategories.Categories.SelectMany(x => x.Child)
+                .Union(AvailableCategories.Categories), "Name", "Title", model.Category);
+
+            return this.View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductViewModel model)
+        public async Task<IActionResult> CreateOrEdit(CreateOrEditProductViewModel model)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            return this.RedirectToAction("List");
-        }
+            Product product;
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await this.productRepository.Get(id).ConfigureAwait(false);
-
-            var model = new EditProductViewModel
+            if (model.Id.HasValue)
             {
-                Id = product.Id,
-                Title = product.Title,
-                Colors = string.Join(";", product.Colors.Select(x => x.Value)),
-                Sizes = string.Join(";", product.Sizes.Select(x => x.Value)),
-                Price = product.Price,
-                Thumbnail = product.Thumbnail,
-                Photos = product.Photos.Select(x => x.Uri).ToList()
-            };
+                product = await this.productRepository.Get(model.Id.Value).ConfigureAwait(false);
+            }
+            else
+            {
+                product = new Product();
+            }
 
-            return this.View(model);
+            product.Title = model.Title;
+            product.Price = model.Price;
+            product.Colors = model.Colors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => new Color { Value = x })
+                .ToList();
+
+            product.Sizes = model.Sizes.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => new Size { Value = x })
+                .ToList();
+
+            product.Category = model.Category;
+            product.Description = model.Description;
+
+            await (model.Id.HasValue
+                ? this.productRepository.Update(product)
+                : this.productRepository.Create(product));
+
+            return this.RedirectToAction(model.Id.HasValue ? "Details" : "CreateOrEdit", new { id = product.Id });
         }
 
         public IActionResult Upload(int productId)
@@ -129,33 +168,10 @@ namespace Piligrim.Web.Controllers
 
             await this.productRepository.Update(product);
 
-            return this.RedirectToAction("Edit", new { id = model.ProductId });
+            return this.RedirectToAction("CreateOrEdit", new { id = model.ProductId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditProductViewModel model)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(model);
-            }
-
-            var product = await this.productRepository.Get(model.Id).ConfigureAwait(false);
-
-            product.Title = model.Title;
-            product.Price = model.Price;
-            product.Colors = model.Colors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => new Color { Value = x })
-                .ToList();
-
-            product.Sizes = model.Sizes.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => new Size { Value = x })
-                .ToList();
-
-
-            return this.RedirectToAction("List");
-        }
-
         public async Task<IActionResult> DeletePhoto(int productId, string photoUri)
         {
             var product = await this.productRepository.Get(productId).ConfigureAwait(false);
@@ -172,7 +188,31 @@ namespace Piligrim.Web.Controllers
 
             await this.productRepository.Update(product).ConfigureAwait(false);
 
-            return this.RedirectToAction("Edit", new { id = productId });
+            return this.RedirectToAction("CreateOrEdit", new { id = productId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await this.productRepository.Get(id).ConfigureAwait(false);
+
+            product.Deleted = true;
+
+            await this.productRepository.Update(product);
+
+            return this.RedirectToAction("Details", new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var product = await this.productRepository.Get(id).ConfigureAwait(false);
+
+            product.Deleted = false;
+
+            await this.productRepository.Update(product);
+
+            return this.RedirectToAction("Details", new { id });
         }
 
         private async Task<IEnumerable<string>> SaveFiles(params IFormFile[] uploadedFiles)

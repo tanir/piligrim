@@ -5,6 +5,33 @@
 }
 <div class="container-fluid product-details">
     <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info">
+                @if (!Model.Deleted)
+                {
+                    <form method="post" asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <button class="btn btn-default" type="submit">Удалить</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-action="Restore">
+                        <input type="hidden" asp-for="Id" />
+                        <button class="btn btn-default" type="submit">Отменить удаление</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info">
+                <a class="btn btn-default" asp-action="CreateOrEdit" asp-route-id="@Model.Id">Редактировать</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6">
             <div class="container-fluid">
                 <div class="row">
@@ -28,9 +55,11 @@
         <div class="col-sm-6">
 
             <h1>@Model.Title</h1>
-            <h2><span class="label label-danger">@Model.Price.ToString("G") <span class="fa fa-rub"></span></span></h2>
+            <h2>
+                <span class="label label-danger">@Model.Price.ToString("G") <span class="fa fa-rub"></span></span>
+            </h2>
 
-            <form class="form-horizontal" data-bind="submit: addOrderItem">
+            <form class="form-horizontal add-order-form" data-bind="submit: addOrderItem">
                 <input type="hidden" name="thumbnail" value="@Model.Thumbnail" />
                 <input type="hidden" name="id" value="@Model.Id" />
                 <input type="hidden" name="price" value="@Model.Price" />

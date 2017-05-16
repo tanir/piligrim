@@ -27,8 +27,7 @@ namespace Piligrim.Data
 
             if (filter.ParentCategory != null)
             {
-                var parentCategory =
-                    AvailableCategories.Categories.FirstOrDefault(x => x.Name == filter.ParentCategory);
+                var parentCategory = AvailableCategories.Categories.FirstOrDefault(x => x.Name == filter.ParentCategory);
 
                 if (parentCategory != null)
                 {
@@ -41,6 +40,7 @@ namespace Piligrim.Data
                                                           || x.Title.Contains(filter.SearchKeyword)
                                                           || x.Description.Contains(filter.SearchKeyword)) &&
                                                       (!categories.Any() || categories.Contains(x.Category)))
+                                                      .Where(x => !x.Deleted)
                                             .ToListAsync();
 
             return products;
@@ -54,9 +54,10 @@ namespace Piligrim.Data
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task Create(Product product)
+        public async Task Create(Product product)
         {
-            return this.dbContext.Products.AddAsync(product);
+            await this.dbContext.Products.AddAsync(product);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public Task Update(Product product)

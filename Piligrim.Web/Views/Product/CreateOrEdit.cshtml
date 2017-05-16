@@ -1,0 +1,102 @@
+﻿@model CreateOrEditProductViewModel
+
+<h1>Редактирование продукта</h1>
+<form class="form-horizontal edit-product" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Thumbnail" />
+    @if(Model.Id.HasValue)
+    {
+        @for(var i=0;i<Model.Photos.Count;i++)
+        {
+            <input type="hidden" name="Photos[@i]" value="@Model.Photos[i]" />
+        }
+    }
+    <div class="form-group">
+        <label class="control-label col-sm-4">Название</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Описание</label>
+        <div class="col-sm-8">
+            <textarea class="form-control" asp-for="Description" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Доступные цвета</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Colors" placeholder="Вводите через точку с запятой" />
+            <span asp-validation-for="Colors" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Доступные размеры</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Sizes" placeholder="Вводите через точку с запятой" />
+            <span asp-validation-for="Sizes" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Цена</label>
+        <div class="col-sm-8">
+            <input class="form-control" asp-for="Price" placeholder="Например 250.10" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Категория</label>
+        <div class="col-sm-8">
+            <select class="form-control" asp-for="Category" asp-items="ViewBag.Categories"></select>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+    </div>
+    @if (Model.Id.HasValue)
+    {
+        <div class="form-group">
+            <label class="control-label col-sm-4">Тамбнейл</label>
+            <div class="col-sm-8">
+                @if(string.IsNullOrEmpty(Model.Thumbnail))
+                {
+                    <span>Нет тамбнейла</span>
+                }
+                else
+                {
+                    <img src="@Model.Thumbnail" alt="@Model.Title" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4">Фотографии</label>
+            <div class="col-sm-8">
+                @if(Model.Photos==null || !Model.Photos.Any())
+                {
+                    <span>Нет фотографий</span>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            @foreach (var photo in Model.Photos)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@photo" alt="@Model.Title" />
+                                    </td>
+                                    <td>
+                                        <a asp-action="DeletePhoto" asp-route-productId="@Model.Id" asp-route-photoUri="@photo">Удалить</a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <a asp-action="Upload" asp-route-productId="@Model.Id" class="btn btn-default">Добавить фотографии или заменить тамбнейл</a>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+</form>
+

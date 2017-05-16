@@ -16,6 +16,8 @@ namespace Piligrim.Web.ViewModels.Product
 
         public string Thumbnail { get; set; }
 
+        public bool Deleted { get; set; }
+
         public IEnumerable<string> Sizes { get; set; }
 
         public IEnumerable<string> Colors { get; set; }

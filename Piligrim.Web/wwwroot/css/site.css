@@ -8,7 +8,7 @@
     width: 200px;
 }
         
-.product-details form {
+.product-details form.add-order-form {
     margin-top: 40px;
 }
 .product-details .input-group, .cart .input-group {

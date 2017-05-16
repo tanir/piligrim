@@ -16,6 +16,8 @@ namespace Piligrim.Core.Models
 
         public string Category { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual ICollection<Photo> Photos { get; set; }
 
         public virtual ICollection<Size> Sizes { get; set; }

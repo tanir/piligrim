@@ -28,6 +28,7 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00057" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />

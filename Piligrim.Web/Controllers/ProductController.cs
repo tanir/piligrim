@@ -16,12 +16,12 @@ using Piligrim.Web.ViewModels.Product;
 
 namespace Piligrim.Web.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductController : Controller
     {
         private readonly IProductsRepository productsRepository;
         private readonly IHostingEnvironment env;
 
-        public ProductsController(IProductsRepository productsRepository, IHostingEnvironment env)
+        public ProductController(IProductsRepository productsRepository, IHostingEnvironment env)
         {
             this.productsRepository = productsRepository;
             this.env = env;
@@ -36,7 +36,7 @@ namespace Piligrim.Web.Controllers
 
             this.ViewData["Title"] = search ?? (currentCategory?.Title ?? "Список товаров");
 
-            var filter = new ProductFilter { SearchKeyword = search, Category = category };
+            var filter = new ProductFilter { SearchKeyword = search, Category = search == null ? category : null };
 
             var products = await this.productsRepository.Find(filter);
 

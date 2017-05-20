@@ -26,7 +26,7 @@
                                 <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Price')}, value: price" />
                                 <input type="hidden" data-bind="attr: {name: $parent.orderItemName($index(), 'Count')}, value: count" />
 
-                                <img data-bind="attr: { src: thumbnail, alt: title}" />
+                                <img data-bind="attr: { src: ('/image/100/75?url=' + thumbnail), alt: title}" />
                             </td>
                             <td>
                                 <span data-bind="text: title"></span> <br />

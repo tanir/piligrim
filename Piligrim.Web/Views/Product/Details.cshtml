@@ -41,11 +41,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="fotorama" data-nav="thumbs">
-                        <img src="@Model.Thumbnail" alt="@Model.Title" />
+                        <img src="/image/400/300?url=@Model.Thumbnail" alt="@Model.Title" />
 
                         @foreach (var photo in Model.Photos)
                         {
-                            <img src="@photo" alt="@Model.Title" />
+                            <img src="/image/400/300?url=@photo" alt="@Model.Title" />
                         }
                     </div>
                 </div>

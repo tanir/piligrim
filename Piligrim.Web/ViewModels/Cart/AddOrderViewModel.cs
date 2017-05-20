@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Piligrim.Core.Models;
 
 namespace Piligrim.Web.ViewModels.Cart
 {
@@ -19,23 +18,11 @@ namespace Piligrim.Web.ViewModels.Cart
 
         public string Comment { get; set; }
 
-        public IEnumerable<Tuple<string, string>> AvailableDeliveries { get; } = new[]
-        {
-            Tuple.Create("pickup", "Самовывоз"),
-            Tuple.Create("courier", "Доставка курьерской службой")
-        };
-
         [Required(ErrorMessage = "Выберите способ доставки")]
-        public string Delivery { get; set; }
-
-        public IEnumerable<Tuple<string, string>> AvailablePayments { get; } = new[]
-        {
-            Tuple.Create("forDetails", "Оплата по реквизитам"),
-            Tuple.Create("uponReceipt", "При получении")
-        };
+        public DeliveryMethod Delivery { get; set; }
 
         [Required(ErrorMessage = "Выберите способ оплаты")]
-        public string Payment { get; set; }
+        public PaymentMethod Payment { get; set; }
 
         [Required(ErrorMessage = "Нет товаров")]
         public OrderItemViewModel[] OrderItems { get; set; }

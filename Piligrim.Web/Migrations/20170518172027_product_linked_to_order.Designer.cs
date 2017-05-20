@@ -9,9 +9,10 @@ using Piligrim.Core.Models;
 namespace Piligrim.Web.Migrations
 {
     [DbContext(typeof(ProductsDbContext))]
-    partial class ProductsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170518172027_product_linked_to_order")]
+    partial class product_linked_to_order
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -42,13 +43,13 @@ namespace Piligrim.Web.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int>("Delivery");
+                    b.Property<string>("Delivery");
 
                     b.Property<string>("DeliveryComment");
 
                     b.Property<string>("Email");
 
-                    b.Property<int>("Payment");
+                    b.Property<string>("Payment");
 
                     b.Property<string>("PhoneNumber");
 

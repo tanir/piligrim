@@ -2,13 +2,19 @@
 @model IEnumerable<ProductsListViewModel>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="alert alert-info">
-                <a class="btn btn-default" asp-action="CreateOrEdit">Создать новый продукт</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="alert alert-info">
+                    <a class="btn btn-default" asp-action="CreateOrEdit">Создать новый продукт</a>
+                </div>
+                <div class="alert alert-info">
+                    <a class="btn btn-default" asp-action="List" asp-controller="Orders">Заказы</a>
+                </div>
             </div>
         </div>
-    </div>
+    }
     <div class="row">
         @foreach (var product in Model)
         {
@@ -18,7 +24,7 @@
                         <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"><img class="img-thumbnail" src="@product.Thumbnail" alt="@product.Title" /></a>
                     </li>
                     <li class="list-group-item list-group-item-danger text-center">
-                        <b>@product.Price.ToString("G") <span class="fa fa-rub"></span></b>
+                        <b>@product.Price.ToString("0.00") <span class="fa fa-rub"></span></b>
                     </li>
                     <li class="list-group-item text-center">
                         <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Title</a>

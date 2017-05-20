@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Piligrim.Core.Models
 {
@@ -17,6 +19,9 @@ namespace Piligrim.Core.Models
         public string Category { get; set; }
 
         public bool Deleted { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime Timestamp { get; set; }
 
         public virtual ICollection<Photo> Photos { get; set; }
 

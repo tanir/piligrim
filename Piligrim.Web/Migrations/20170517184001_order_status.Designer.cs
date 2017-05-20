@@ -9,9 +9,10 @@ using Piligrim.Core.Models;
 namespace Piligrim.Web.Migrations
 {
     [DbContext(typeof(ProductsDbContext))]
-    partial class ProductsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170517184001_order_status")]
+    partial class order_status
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -42,20 +43,19 @@ namespace Piligrim.Web.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int>("Delivery");
+                    b.Property<string>("Delivery");
 
                     b.Property<string>("DeliveryComment");
 
                     b.Property<string>("Email");
 
-                    b.Property<int>("Payment");
+                    b.Property<string>("Payment");
 
                     b.Property<string>("PhoneNumber");
 
                     b.Property<int>("Status");
 
-                    b.Property<DateTime>("Timestamp")
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");
 
@@ -75,15 +75,13 @@ namespace Piligrim.Web.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int>("ProductId");
 
                     b.Property<string>("Size");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderItem");
                 });
@@ -119,8 +117,7 @@ namespace Piligrim.Web.Migrations
 
                     b.Property<string>("Thumbnail");
 
-                    b.Property<DateTime>("Timestamp")
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<DateTime>("Timestamp");
 
                     b.Property<string>("Title");
 
@@ -157,10 +154,6 @@ namespace Piligrim.Web.Migrations
                     b.HasOne("Piligrim.Core.Models.Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId");
-
-                    b.HasOne("Piligrim.Core.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Piligrim.Core.Models.Photo", b =>

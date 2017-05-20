@@ -1,0 +1,88 @@
+﻿@model OrderViewModel
+<h1>Информация о заказе</h1>
+<div class="row">
+    <div class="col-sm-12">
+        <form class="form-horizontal" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Номер заказа</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Id</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Email</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Email</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Номер телефона</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.PhoneNumber</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Комментарий</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Comment</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Способ доставки</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Delivery.GetDisplayName()</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Способ оплаты</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Payment.GetDisplayName()</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Время заказа</label>
+                <div class="col-sm-8">
+                    <p class="form-control-static">@Model.Timestamp</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Статус заказа</label>
+                <div class="col-sm-8">
+                    <select class="form-control" asp-for="Status" asp-items="Html.GetEnumSelectList<Piligrim.Core.Models.OrderStatus>()"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Комментарий о доставке</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" asp-for="DeliveryComment" rows="4"></textarea>
+                </div>
+            </div>
+            <h3>Содержимое заказа</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Название</th>
+                        <th>Цвет</th>
+                        <th>Размер</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                    </tr>
+                    @foreach (var orderItem in Model.OrderItems)
+                    {
+                        <tr>
+                            <td><a asp-action="Details" asp-controller="Product" asp-route-id="@orderItem.ProductId">@orderItem.Title</a></td>
+                            <td>@orderItem.Color</td>
+                            <td>@orderItem.Size</td>
+                            <td>@orderItem.Price</td>
+                            <td>@orderItem.Count</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <h3>Итого: @Model.Cost.ToString("0.00")</h3>
+            <button class="btn btn-success" type="submit">Сохранить</button>
+        </form>
+        
+    </div>
+</div>

@@ -75,12 +75,12 @@
             <div class="col-sm-6">
                 <h4>Доставка</h4>
                 <div class="form-group">
-                    @foreach (var delivery in Model.AvailableDeliveries)
+                    @foreach (var delivery in Html.GetEnumSelectList<Piligrim.Core.Models.DeliveryMethod>())
                     {
                         <div class="radio">
                             <label>
-                                <input asp-for="Delivery" type="radio" value="@delivery.Item1">
-                                @delivery.Item2
+                                <input asp-for="Delivery" type="radio" value="@delivery.Value">
+                                @delivery.Text
                             </label>
                         </div>
                     }
@@ -90,12 +90,12 @@
 
                 <div class="form-group">
                     <h4>Оплата</h4>
-                    @foreach (var payment in Model.AvailablePayments)
+                    @foreach (var payment in Html.GetEnumSelectList<Piligrim.Core.Models.PaymentMethod>())
                     {
                         <div class="radio">
                             <label>
-                                <input asp-for="Payment" type="radio" value="@payment.Item1">
-                                @payment.Item2
+                                <input asp-for="Payment" type="radio" value="@payment.Value">
+                                @payment.Text
                             </label>
                         </div>
                     }

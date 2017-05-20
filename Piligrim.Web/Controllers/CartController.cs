@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Piligrim.Core;
 using Piligrim.Core.Models;
@@ -9,12 +10,14 @@ namespace Piligrim.Web.Controllers
     public class CartController : Controller
     {
         private readonly IOrdersRepository ordersRepository;
+        private readonly IProductRepository productRepository;
 
-        public CartController(IOrdersRepository ordersRepository)
+        public CartController(IOrdersRepository ordersRepository, IProductRepository productRepository)
         {
             this.ordersRepository = ordersRepository;
+            this.productRepository = productRepository;
         }
-        
+
         public IActionResult Index()
         {
             var model = new AddOrderViewModel();
@@ -22,12 +25,15 @@ namespace Piligrim.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOrder(AddOrderViewModel model)
+        public async Task<IActionResult> CreateOrder(AddOrderViewModel model)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View("Index", model);
             }
+
+            var products = await this.productRepository.Get(model.OrderItems.Select(x => x.Id).ToArray())
+                .ConfigureAwait(false);
 
             var order = new Order
             {
@@ -44,7 +50,7 @@ namespace Piligrim.Web.Controllers
                         Size = x.Size,
                         Count = x.Count,
                         Price = x.Price,
-                        ProductId = x.Id
+                        Product = products[x.Id]
                     })
                     .ToList()
             };

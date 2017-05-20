@@ -1,0 +1,24 @@
+﻿@model OrderListViewModel
+<div class="table-responsive">
+    <table class="table table-condensed table-hover">
+        <tr>
+            <th>Email</th>
+            <th>Время создания</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.Email</td>
+                <td>@order.Timestamp</td>
+                <td>@order.Status.GetDisplayName()</td>
+                <td><a asp-action="Details" asp-route-id="@order.Id">Подробнее</a></td>
+            </tr>
+        }
+    </table>
+    <div class="btn-group">
+        <a class="btn btn-default @(ViewBag.Page == 1 ? "disabled" : string.Empty)" asp asp-sction="List" asp-route-page="@(ViewBag.Page - 1)">Предыдущий</a>
+        <a class="btn btn-default" asp-action="List" asp-route-page="@(ViewBag.Page+1)">Следующий</a>
+    </div>
+</div>

@@ -9,9 +9,10 @@ using Piligrim.Core.Models;
 namespace Piligrim.Web.Migrations
 {
     [DbContext(typeof(ProductsDbContext))]
-    partial class ProductsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170520073157_enum_delivery_payment")]
+    partial class enum_delivery_payment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

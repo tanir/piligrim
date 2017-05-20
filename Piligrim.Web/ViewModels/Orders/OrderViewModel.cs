@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Piligrim.Core.Models;
 
-namespace Piligrim.Core.Models
+namespace Piligrim.Web.ViewModels.Orders
 {
-    public class Order
+    public class OrderViewModel
     {
         public int Id { get; set; }
 
@@ -12,21 +13,23 @@ namespace Piligrim.Core.Models
 
         public string PhoneNumber { get; set; }
 
-        public string Address { get; set; }
-
         public string Comment { get; set; }
 
         public DeliveryMethod Delivery { get; set; }
 
         public PaymentMethod Payment { get; set; }
 
-        public string DeliveryComment { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Timestamp { get; set; }
 
         public OrderStatus Status { get; set; }
 
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public string DeliveryComment { get; set; }
+
+        public IEnumerable<OrderItemViewModel> OrderItems { get; set; }
+
+        public decimal Cost
+        {
+            get { return this.OrderItems.Sum(x => x.Price * x.Count); }
+        }
     }
 }

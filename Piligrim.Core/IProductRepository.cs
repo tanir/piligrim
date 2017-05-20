@@ -10,6 +10,8 @@ namespace Piligrim.Core
 
         Task<Product> Get(int id);
 
+        Task<IDictionary<int, Product>> Get(int[] id);
+
         Task Create(Product product);
 
         Task Update(Product product);

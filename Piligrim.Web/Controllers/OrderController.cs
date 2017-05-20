@@ -1,8 +1,11 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Piligrim.Core;
+using Piligrim.Core.Mail;
 using Piligrim.Core.Models;
+using Piligrim.Web.Configuration;
 using Piligrim.Web.ViewModels.Cart;
 
 namespace Piligrim.Web.Controllers
@@ -11,11 +14,19 @@ namespace Piligrim.Web.Controllers
     {
         private readonly IOrdersRepository ordersRepository;
         private readonly IProductsRepository productsRepository;
+        private readonly IEmailService emailService;
+        private readonly IOptions<AppSettings> appSettings;
 
-        public OrderController(IOrdersRepository ordersRepository, IProductsRepository productsRepository)
+        public OrderController(
+            IOrdersRepository ordersRepository,
+            IProductsRepository productsRepository,
+            IEmailService emailService,
+            IOptions<AppSettings> appSettings)
         {
             this.ordersRepository = ordersRepository;
             this.productsRepository = productsRepository;
+            this.emailService = emailService;
+            this.appSettings = appSettings;
         }
 
         public IActionResult Index()
@@ -55,7 +66,13 @@ namespace Piligrim.Web.Controllers
                     .ToList()
             };
 
-            var added = this.ordersRepository.Add(order);
+            var added = await this.ordersRepository.Add(order).ConfigureAwait(false);
+
+            await this.emailService.SendEmailAsync(order.Email, "Новый заказ из Piligrim",
+                $"Вами сделан заказ {added.Id}. Скоро с вами свяжутся наши сотрудники. Команда Piligrim {this.appSettings.Value.PhoneNumber}");
+
+            await this.emailService.SendEmailAsync(this.appSettings.Value.EmailForOrders, "Поступил новый заказ",
+                $"Поступил новый заказ {added.Id}");
 
             return this.RedirectToAction("Success", new SuccessViewModel { OrderId = added.Id });
         }

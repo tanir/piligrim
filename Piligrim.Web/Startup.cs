@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Piligrim.Core;
+using Piligrim.Core.Mail;
 using Piligrim.Data;
 using Piligrim.Web.Configuration;
 using Piligrim.Web.Extensions;
@@ -30,6 +31,16 @@ namespace Piligrim.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
+            services.Configure<MailConfiguration>(configuration =>
+            {
+                configuration.From = this.Configuration.GetSection("MailConfiguration:From").Get<MailAddress>();
+                configuration.Smtp = this.Configuration.GetSection("MailConfiguration:Smtp").Get<Smtp>();
+            });
+
+            services.Configure<AppSettings>(this.Configuration);
+
             services.AddMvc();
 
             services.AddProductsDbContext(this.Configuration.GetConnectionString("products-db"));
@@ -38,7 +49,7 @@ namespace Piligrim.Web
 
             services.AddSingleton<IOrdersRepository, OrdersRepository>();
 
-            services.Configure<AppSettings>(this.Configuration);
+            services.AddSingleton<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

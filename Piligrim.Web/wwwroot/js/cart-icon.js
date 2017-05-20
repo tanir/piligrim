@@ -57,7 +57,7 @@
 
     self.destroy = function () {
 
-        self.items = [];
+        self.items.removeAll();
 
         localStorage.removeItem("orderItems");
     }

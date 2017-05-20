@@ -6,35 +6,28 @@
 <div class="container-fluid product-details">
     @if (User.IsInRole("Admin"))
     {
-        <text>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="alert alert-info">
-                    @if (!Model.Deleted)
-                    {
-                        <form method="post" asp-action="Delete">
-                            <input type="hidden" asp-for="Id" />
-                            <button class="btn btn-default" type="submit">Удалить</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <form method="post" asp-action="Restore">
-                            <input type="hidden" asp-for="Id" />
-                            <button class="btn btn-default" type="submit">Отменить удаление</button>
-                        </form>
-                    }
-                </div>
-            </div>
+        <div class="well">
+            @if (!Model.Deleted)
+            {
+                <form method="post" asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="btn-toolbar">
+                        <a class="btn btn-default" asp-action="CreateOrEdit" asp-route-id="@Model.Id">Редактировать</a>
+                        <button class="btn btn-default" type="submit">Удалить</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-action="Restore">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="btn-toolbar">
+                        <a class="btn btn-default" asp-action="CreateOrEdit" asp-route-id="@Model.Id">Редактировать</a>
+                        <button class="btn btn-default" type="submit">Отменить удаление</button>
+                    </div>
+                </form>
+            }
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="alert alert-info">
-                    <a class="btn btn-default" asp-action="CreateOrEdit" asp-route-id="@Model.Id">Редактировать</a>
-                </div>
-            </div>
-        </div>
-        </text>
     }
     <div class="row">
         <div class="col-sm-6">

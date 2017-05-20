@@ -1,4 +1,7 @@
 ﻿@model OrderViewModel
+@{
+    ViewData["Title"] = "Информация о заказе";
+}
 <h1>Информация о заказе</h1>
 <div class="row">
     <div class="col-sm-12">
@@ -83,6 +86,6 @@
             <h3>Итого: @Model.Cost.ToString("0.00")</h3>
             <button class="btn btn-success" type="submit">Сохранить</button>
         </form>
-        
+
     </div>
 </div>

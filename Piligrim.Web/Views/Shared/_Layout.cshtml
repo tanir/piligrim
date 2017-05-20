@@ -31,7 +31,7 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="navbar-right">
+                        <div class="navbar-right logout-btn">
                             <a asp-action="SignOut" asp-controller="Login" class="btn btn-default navbar-btn">
                                 <span>Выйти</span>
                             </a>
@@ -40,7 +40,7 @@
 
                     <div class="navbar-right">
                         <a asp-action="Index" asp-controller="Order" class="btn btn-default navbar-btn cart-icon">
-                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            <span class="fa fa-shopping-cart"></span>
                             <span class="badge" data-bind="{text: count}"></span>
                         </a>
                     </div>

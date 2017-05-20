@@ -8,11 +8,11 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
-    public class ProductRepository : IProductRepository
+    public class ProductsRepository : IProductsRepository
     {
         private readonly ProductsDbContext dbContext;
 
-        public ProductRepository(ProductsDbContext dbContext)
+        public ProductsRepository(ProductsDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

@@ -27,7 +27,7 @@ namespace Piligrim.Web.Components
             return new MenuItem
             {
                 Title = category.Title,
-                Url = this.Url.Action("List", "Product", new { category = category.Name, parent = parent?.Name }),
+                Url = this.Url.Action("List", "Products", new { category = category.Name, parent = parent?.Name }),
                 Child = category.Child.Any()
                     ? category.Child.Select(x => Build(x, category))
                     : Enumerable.Empty<MenuItem>()

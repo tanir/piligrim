@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,14 @@ using Piligrim.Web.ViewModels.Product;
 
 namespace Piligrim.Web.Controllers
 {
-    public class ProductController : Controller
+    public class ProductsController : Controller
     {
-        private readonly IProductRepository productRepository;
+        private readonly IProductsRepository productsRepository;
         private readonly IHostingEnvironment env;
 
-        public ProductController(IProductRepository productRepository, IHostingEnvironment env)
+        public ProductsController(IProductsRepository productsRepository, IHostingEnvironment env)
         {
-            this.productRepository = productRepository;
+            this.productsRepository = productsRepository;
             this.env = env;
         }
 
@@ -37,7 +38,7 @@ namespace Piligrim.Web.Controllers
 
             var filter = new ProductFilter { SearchKeyword = search, Category = category };
 
-            var products = await this.productRepository.Find(filter);
+            var products = await this.productsRepository.Find(filter);
 
             var model = products.Select(x => new ProductsListViewModel(x.Id, x.Thumbnail, x.Price, x.Title));
 
@@ -47,7 +48,7 @@ namespace Piligrim.Web.Controllers
         [Route("product/{id:int}")]
         public async Task<IActionResult> Details(int id)
         {
-            var product = await this.productRepository.Get(id);
+            var product = await this.productsRepository.Get(id);
 
             var model = new ProductDetailsViewModel
             {
@@ -66,13 +67,14 @@ namespace Piligrim.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateOrEdit(int? id)
         {
             CreateOrEditProductViewModel model;
 
             if (id.HasValue)
             {
-                var product = await this.productRepository.Get(id.Value).ConfigureAwait(false);
+                var product = await this.productsRepository.Get(id.Value).ConfigureAwait(false);
 
                 model = new CreateOrEditProductViewModel
                 {
@@ -99,6 +101,7 @@ namespace Piligrim.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateOrEdit(CreateOrEditProductViewModel model)
         {
             if (!this.ModelState.IsValid)
@@ -110,7 +113,7 @@ namespace Piligrim.Web.Controllers
 
             if (model.Id.HasValue)
             {
-                product = await this.productRepository.Get(model.Id.Value).ConfigureAwait(false);
+                product = await this.productsRepository.Get(model.Id.Value).ConfigureAwait(false);
             }
             else
             {
@@ -131,18 +134,20 @@ namespace Piligrim.Web.Controllers
             product.Description = model.Description;
 
             await (model.Id.HasValue
-                ? this.productRepository.Update(product)
-                : this.productRepository.Create(product));
+                ? this.productsRepository.Update(product)
+                : this.productsRepository.Create(product));
 
             return this.RedirectToAction(model.Id.HasValue ? "Details" : "CreateOrEdit", new { id = product.Id });
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Upload(int productId)
         {
             return this.View(new UploadViewModel { ProductId = productId });
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Upload(UploadViewModel model)
         {
             if (!this.ModelState.IsValid)
@@ -150,7 +155,7 @@ namespace Piligrim.Web.Controllers
                 return this.View(model);
             }
 
-            var product = await this.productRepository.Get(model.ProductId).ConfigureAwait(false);
+            var product = await this.productsRepository.Get(model.ProductId).ConfigureAwait(false);
 
             if (model.Photos != null)
             {
@@ -166,15 +171,16 @@ namespace Piligrim.Web.Controllers
                 product.Thumbnail = thumbnailUri.Single();
             }
 
-            await this.productRepository.Update(product);
+            await this.productsRepository.Update(product);
 
             return this.RedirectToAction("CreateOrEdit", new { id = model.ProductId });
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePhoto(int productId, string photoUri)
         {
-            var product = await this.productRepository.Get(productId).ConfigureAwait(false);
+            var product = await this.productsRepository.Get(productId).ConfigureAwait(false);
 
             var deletePhoto = product.Photos.FirstOrDefault(x => x.Uri == photoUri);
 
@@ -186,35 +192,38 @@ namespace Piligrim.Web.Controllers
 
             product.Photos.Remove(deletePhoto);
 
-            await this.productRepository.Update(product).ConfigureAwait(false);
+            await this.productsRepository.Update(product).ConfigureAwait(false);
 
             return this.RedirectToAction("CreateOrEdit", new { id = productId });
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await this.productRepository.Get(id).ConfigureAwait(false);
+            var product = await this.productsRepository.Get(id).ConfigureAwait(false);
 
             product.Deleted = true;
 
-            await this.productRepository.Update(product);
+            await this.productsRepository.Update(product);
 
             return this.RedirectToAction("Details", new { id });
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Restore(int id)
         {
-            var product = await this.productRepository.Get(id).ConfigureAwait(false);
+            var product = await this.productsRepository.Get(id).ConfigureAwait(false);
 
             product.Deleted = false;
 
-            await this.productRepository.Update(product);
+            await this.productsRepository.Update(product);
 
             return this.RedirectToAction("Details", new { id });
         }
 
+        [NonAction]
         private async Task<IEnumerable<string>> SaveFiles(params IFormFile[] uploadedFiles)
         {
             var imageRootFolder = this.env.WebRootPath;

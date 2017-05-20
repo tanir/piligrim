@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
-    <Folder Include="Views\Cart\" />
+    <Folder Include="Views\Order\" />
     <Folder Include="Views\Orders\" />
     <Folder Include="Views\Shared\Components\Search\" />
     <Folder Include="wwwroot\lib\" />
@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
     <PackageReference Include="microsoft.aspnetcore.mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Tools" Version="1.1.0-preview4-final" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />

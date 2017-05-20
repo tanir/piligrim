@@ -71,7 +71,7 @@
                     @foreach (var orderItem in Model.OrderItems)
                     {
                         <tr>
-                            <td><a asp-action="Details" asp-controller="Product" asp-route-id="@orderItem.ProductId">@orderItem.Title</a></td>
+                            <td><a asp-action="Details" asp-controller="Products" asp-route-id="@orderItem.ProductId">@orderItem.Title</a></td>
                             <td>@orderItem.Color</td>
                             <td>@orderItem.Size</td>
                             <td>@orderItem.Price</td>

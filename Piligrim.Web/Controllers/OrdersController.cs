@@ -2,10 +2,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Piligrim.Core;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Piligrim.Web.ViewModels.Orders;
 
 namespace Piligrim.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         private const int PageSize = 20;

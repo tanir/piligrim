@@ -7,15 +7,15 @@ using Piligrim.Web.ViewModels.Cart;
 
 namespace Piligrim.Web.Controllers
 {
-    public class CartController : Controller
+    public class OrderController : Controller
     {
         private readonly IOrdersRepository ordersRepository;
-        private readonly IProductRepository productRepository;
+        private readonly IProductsRepository productsRepository;
 
-        public CartController(IOrdersRepository ordersRepository, IProductRepository productRepository)
+        public OrderController(IOrdersRepository ordersRepository, IProductsRepository productsRepository)
         {
             this.ordersRepository = ordersRepository;
-            this.productRepository = productRepository;
+            this.productsRepository = productsRepository;
         }
 
         public IActionResult Index()
@@ -32,7 +32,7 @@ namespace Piligrim.Web.Controllers
                 return this.View("Index", model);
             }
 
-            var products = await this.productRepository.Get(model.OrderItems.Select(x => x.Id).ToArray())
+            var products = await this.productsRepository.Get(model.OrderItems.Select(x => x.Id).ToArray())
                 .ConfigureAwait(false);
 
             var order = new Order

@@ -21,13 +21,13 @@
             <div class="col-sm-3">
                 <div class="panel">
                     <li class="list-group-item">
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"><img class="img-thumbnail" src="@product.Thumbnail" alt="@product.Title" /></a>
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id"><img class="img-thumbnail" src="@product.Thumbnail" alt="@product.Title" /></a>
                     </li>
                     <li class="list-group-item list-group-item-danger text-center">
                         <b>@product.Price.ToString("0.00") <span class="fa fa-rub"></span></b>
                     </li>
                     <li class="list-group-item text-center">
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Title</a>
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Title</a>
                     </li>
                 </div>
             </div>

@@ -4,7 +4,7 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Core
 {
-    public interface IProductRepository
+    public interface IProductsRepository
     {
         Task<IEnumerable<Product>> Find(ProductFilter filter);
 

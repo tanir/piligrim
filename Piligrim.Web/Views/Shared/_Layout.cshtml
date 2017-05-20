@@ -29,8 +29,17 @@
                         <a class="navbar-brand" href="/"><b>PILIGRIM</b></a>
                     </div>
 
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="navbar-right">
+                            <a asp-action="SignOut" asp-controller="Login" class="btn btn-default navbar-btn">
+                                <span>Выйти</span>
+                            </a>
+                        </div>
+                    }
+
                     <div class="navbar-right">
-                        <a asp-action="Index" asp-controller="Cart" class="btn btn-default navbar-btn cart-icon">
+                        <a asp-action="Index" asp-controller="Order" class="btn btn-default navbar-btn cart-icon">
                             <span class="glyphicon glyphicon-shopping-cart"></span>
                             <span class="badge" data-bind="{text: count}"></span>
                         </a>

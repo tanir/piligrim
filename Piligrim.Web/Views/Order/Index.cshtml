@@ -60,7 +60,7 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" asp-for="Telephone" placeholder="Телефон" />
+                    <input class="form-control phone-number" asp-for="Telephone" placeholder="Телефон" />
                     <span asp-validation-for="Telephone" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -115,5 +115,6 @@
 
 @section head
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
     <script src="~/js/cart.js" asp-append-version="true"></script>
 }

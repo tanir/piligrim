@@ -8,8 +8,8 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Web.Migrations
 {
-    [DbContext(typeof(ProductsDbContext))]
-    partial class ProductsDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(StoreDbContext))]
+    partial class StoreDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

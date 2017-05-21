@@ -1,6 +1,6 @@
 ﻿using Piligrim.Core.Models;
 
-namespace Piligrim.Core
+namespace Piligrim.Core.Data
 {
     public class OrderFilter
     {

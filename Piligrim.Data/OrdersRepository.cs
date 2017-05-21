@@ -3,15 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Piligrim.Core;
+using Piligrim.Core.Data;
 using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
     public class OrdersRepository : IOrdersRepository
     {
-        private readonly ProductsDbContext context;
+        private readonly StoreDbContext context;
 
-        public OrdersRepository(ProductsDbContext context)
+        public OrdersRepository(StoreDbContext context)
         {
             this.context = context;
         }

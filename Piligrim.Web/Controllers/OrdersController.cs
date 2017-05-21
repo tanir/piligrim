@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Piligrim.Core;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Piligrim.Core.Data;
 using Piligrim.Web.ViewModels.Orders;
 
 namespace Piligrim.Web.Controllers

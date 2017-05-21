@@ -8,7 +8,7 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Web.Migrations
 {
-    [DbContext(typeof(ProductsDbContext))]
+    [DbContext(typeof(StoreDbContext))]
     [Migration("20170518172027_product_linked_to_order")]
     partial class product_linked_to_order
     {

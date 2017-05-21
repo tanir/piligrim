@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Piligrim.Core.Models;
 
-namespace Piligrim.Core
+namespace Piligrim.Core.Data
 {
     public interface IProductsRepository
     {
-        Task<IEnumerable<Product>> Find(ProductFilter filter);
+        Task<List<Product>> Find(ProductFilter filter);
 
         Task<Product> Get(int id);
 

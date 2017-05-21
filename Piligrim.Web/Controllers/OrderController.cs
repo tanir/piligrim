@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Piligrim.Core;
+using Piligrim.Core.Data;
 using Piligrim.Core.Mail;
 using Piligrim.Core.Models;
 using Piligrim.Web.Configuration;
@@ -53,7 +53,7 @@ namespace Piligrim.Web.Controllers
                 Delivery = model.Delivery,
                 Email = model.Email,
                 Payment = model.Payment,
-                PhoneNumber = model.Telephone,
+                PhoneNumber = model.PhoneNumber,
                 OrderItems = model.OrderItems
                     .Select(x => new OrderItem
                     {

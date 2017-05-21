@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Piligrim.Web.Controllers
 {
-    [Route("content")]
     public class ContentController : Controller
     {
-        [Route("{page}")]
+        [Route("content/{page}")]
         public IActionResult Index(string page)
         {
             string view = null;
@@ -31,7 +30,7 @@ namespace Piligrim.Web.Controllers
                 return this.NotFound();
             }
 
-            return View(view);
+            return this.View(view);
         }
     }
 }

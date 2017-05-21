@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Piligrim.Core.Models;
 
-namespace Piligrim.Core
+namespace Piligrim.Core.Data
 {
     public interface IOrdersRepository
     {

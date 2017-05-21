@@ -7,7 +7,7 @@ using Piligrim.Data;
 
 namespace Piligrim.Web.Migrations
 {
-    [DbContext(typeof(ProductsDbContext))]
+    [DbContext(typeof(StoreDbContext))]
     [Migration("20170516180236_ProductDeleted")]
     partial class ProductDeleted
     {

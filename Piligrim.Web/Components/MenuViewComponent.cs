@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Piligrim.Core;
+using Piligrim.Core.Categories;
 using Piligrim.Web.ViewModels.Menu;
 
 namespace Piligrim.Web.Components
 {
     public class MenuViewComponent : ViewComponent
     {
+        private readonly ICategoriesProvider categoriesProvider;
+
+        public MenuViewComponent(ICategoriesProvider categoriesProvider)
+        {
+            this.categoriesProvider = categoriesProvider;
+        }
 
         public IViewComponentResult Invoke()
         {
             var model = new MenuViewModel
             {
-                MenuItems = AvailableCategories.Categories.Select(x => this.Build(x))
+                MenuItems = this.categoriesProvider.GetAll().Select(x => this.Build(x))
             };
 
 

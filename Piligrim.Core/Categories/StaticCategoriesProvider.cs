@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace Piligrim.Core
+namespace Piligrim.Core.Categories
 {
-    public static class AvailableCategories
+    public class StaticCategoriesProvider : ICategoriesProvider
     {
         public static IEnumerable<Category> Categories { get; } = new[]
         {
@@ -30,5 +31,25 @@ namespace Piligrim.Core
             new Category("nitki", "Нитки"),
             new Category("rezina", "Резина")
         };
+
+
+        public IEnumerable<Category> GetAll()
+        {
+            return Categories;
+        }
+
+        public Category Get(string categoryName)
+        {
+            return Categories.SelectMany(x => x.Child).Union(Categories).FirstOrDefault(x => x.Name == categoryName);
+        }
+
+        public IEnumerable<Category> Leafs()
+        {
+            return Categories
+                .SelectMany(x => x.Child)
+                .Union(Categories)
+                .Where(x => x.Child == null || !x.Child.Any())
+                .ToList();
+        }
     }
 }

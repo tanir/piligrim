@@ -34,7 +34,7 @@ namespace Piligrim.Web.Controllers
             }
             else
             {
-                var path = Path.Combine(this.env.ContentRootPath, "wwwroot\\", url.Trim('/').Replace("/", "\\"));
+                var path = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
                 stream = new FileStream(path, FileMode.Open);
             }
 

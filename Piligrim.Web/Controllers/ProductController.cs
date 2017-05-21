@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Packaging;
-using Piligrim.Core;
+using Piligrim.Core.Categories;
+using Piligrim.Core.Data;
 using Piligrim.Core.Models;
 using Piligrim.Web.ViewModels.Product;
 
@@ -20,19 +21,24 @@ namespace Piligrim.Web.Controllers
     {
         private readonly IProductsRepository productsRepository;
         private readonly IHostingEnvironment env;
+        private readonly ICategoriesProvider categoriesProvider;
 
-        public ProductController(IProductsRepository productsRepository, IHostingEnvironment env)
+        public ProductController(
+            IProductsRepository productsRepository,
+            IHostingEnvironment env,
+            ICategoriesProvider categoriesProvider)
         {
             this.productsRepository = productsRepository;
             this.env = env;
+            this.categoriesProvider = categoriesProvider;
         }
 
         [Route("products/{parent}/{category}/", Order = 1)]
         [Route("products/{category}/", Order = 2)]
         [Route("[controller]/[action]", Order = 3)]
-        public async Task<IActionResult> List(string category, string search, string parent)
+        public async Task<IActionResult> List(string category, string search)
         {
-            var currentCategory = AvailableCategories.Categories.FirstOrDefault(x => x.Name == category);
+            var currentCategory = this.categoriesProvider.Get(category);
 
             this.ViewData["Title"] = search ?? (currentCategory?.Title ?? "Список товаров");
 
@@ -94,8 +100,7 @@ namespace Piligrim.Web.Controllers
                 model = new CreateOrEditProductViewModel();
             }
 
-            this.ViewBag.Categories = new SelectList(AvailableCategories.Categories.SelectMany(x => x.Child)
-                .Union(AvailableCategories.Categories), "Name", "Title", model.Category);
+            this.ViewBag.Categories = new SelectList(this.categoriesProvider.Leafs(), "Name", "Title", model.Category);
 
             return this.View(model);
         }
@@ -175,8 +180,7 @@ namespace Piligrim.Web.Controllers
 
             return this.RedirectToAction("CreateOrEdit", new { id = model.ProductId });
         }
-
-        [HttpPost]
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePhoto(int productId, string photoUri)
         {

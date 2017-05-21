@@ -1,49 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Piligrim.Core;
+using Piligrim.Core.Data;
 using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
     public class ProductsRepository : IProductsRepository
     {
-        private readonly ProductsDbContext dbContext;
+        private readonly StoreDbContext dbContext;
 
-        public ProductsRepository(ProductsDbContext dbContext)
+        public ProductsRepository(StoreDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
-        public async Task<IEnumerable<Product>> Find(ProductFilter filter)
+        public Task<List<Product>> Find(ProductFilter filter)
         {
-            var categories = new HashSet<string>();
+            var categories = new List<string>();
 
             if (filter.Category != null)
             {
                 categories.Add(filter.Category);
             }
 
-            if (filter.ParentCategory != null)
-            {
-                var parentCategory = AvailableCategories.Categories.FirstOrDefault(x => x.Name == filter.ParentCategory);
+            var products = this.dbContext.Products.Where(x => !x.Deleted);
 
-                if (parentCategory != null)
-                {
-                    categories.UnionWith(parentCategory.Child.Select(x => x.Name));
-                }
+            if (!string.IsNullOrEmpty(filter.SearchKeyword))
+            {
+                products = products.Where(
+                    x => x.Title.Contains(filter.SearchKeyword) || x.Description.Contains(filter.SearchKeyword));
             }
 
-            var products = await this.dbContext.Products.Where(x => (
-                                                          filter.SearchKeyword == null
-                                                          || x.Title.Contains(filter.SearchKeyword)
-                                                          || x.Description.Contains(filter.SearchKeyword)) &&
-                                                      (!categories.Any() || categories.Contains(x.Category)))
-                                                      .Where(x => !x.Deleted)
-                                            .ToListAsync();
+            if (categories.Any())
+            {
+                products = products.Where(x => categories.Contains(x.Category));
+            }
 
-            return products;
+            return products.ToListAsync();
         }
 
         public Task<Product> Get(int id)

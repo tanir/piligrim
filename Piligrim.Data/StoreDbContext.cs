@@ -3,9 +3,9 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
-    public class ProductsDbContext : DbContext
+    public class StoreDbContext : DbContext
     {
-        public ProductsDbContext(DbContextOptions options) : base(options)
+        public StoreDbContext(DbContextOptions options) : base(options)
         {
         }
 

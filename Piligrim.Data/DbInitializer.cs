@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Piligrim.Core;
+using Piligrim.Core.Categories;
 using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(ProductsDbContext context)
+        public static void Initialize(StoreDbContext context)
         {
             context.Database.EnsureCreated();
 
@@ -17,10 +18,12 @@ namespace Piligrim.Data
                 return;
             }
             var rnd = new Random();
-            
-            var allCategories = new HashSet<string>(AvailableCategories.Categories.Select(x => x.Name));
 
-            allCategories.UnionWith(AvailableCategories.Categories.SelectMany(x => x.Child).Select(x => x.Name));
+            var categories = new StaticCategoriesProvider().GetAll().ToList();
+
+            var allCategories = new HashSet<string>(categories.Select(x => x.Name));
+
+            allCategories.UnionWith(categories.SelectMany(x => x.Child).Select(x => x.Name));
 
             for (var i = 0; i < 50; i++)
             {

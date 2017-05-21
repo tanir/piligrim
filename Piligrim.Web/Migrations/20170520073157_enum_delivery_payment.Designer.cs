@@ -8,7 +8,7 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Web.Migrations
 {
-    [DbContext(typeof(ProductsDbContext))]
+    [DbContext(typeof(StoreDbContext))]
     [Migration("20170520073157_enum_delivery_payment")]
     partial class enum_delivery_payment
     {

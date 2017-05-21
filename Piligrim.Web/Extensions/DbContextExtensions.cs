@@ -8,7 +8,7 @@ namespace Piligrim.Web.Extensions
     {
         public static void AddProductsDbContext(this IServiceCollection collection, string connectionString)
         {
-            collection.AddDbContext<ProductsDbContext>(builder =>
+            collection.AddDbContext<StoreDbContext>(builder =>
                 builder.UseSqlServer(connectionString,
                     options => options.MigrationsAssembly("Piligrim.Web")));
         }

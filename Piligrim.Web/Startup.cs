@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Piligrim.Core;
+using Piligrim.Core.Categories;
+using Piligrim.Core.Data;
 using Piligrim.Core.Mail;
 using Piligrim.Data;
 using Piligrim.Web.Configuration;
@@ -50,6 +52,8 @@ namespace Piligrim.Web
             services.AddSingleton<IOrdersRepository, OrdersRepository>();
 
             services.AddSingleton<IEmailService, EmailService>();
+
+            services.AddSingleton<ICategoriesProvider, StaticCategoriesProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +79,7 @@ namespace Piligrim.Web
 
             app.UseMvcWithDefaultRoute();
 
-            DbInitializer.Initialize(app.ApplicationServices.GetService<ProductsDbContext>());
+            DbInitializer.Initialize(app.ApplicationServices.GetService<StoreDbContext>());
         }
     }
 }

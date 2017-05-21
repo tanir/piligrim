@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Piligrim.Core
+namespace Piligrim.Core.Categories
 {
     public class Category
     {

@@ -1,4 +1,6 @@
-﻿(function ($) {
+﻿var shouter = new ko.subscribable();
+
+(function ($) {
     var defaultOptions = {
         validClass: 'has-success',
         errorClass: 'has-error',

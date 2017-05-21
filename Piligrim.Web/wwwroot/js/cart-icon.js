@@ -33,13 +33,13 @@
     }
 
     self.addOrderItem = function (newOrder) {
-        
+
         self.items.push(newOrder);
 
         localStorage.setItem("orderItems", ko.toJSON(self.items));
     }
 
-    self.increment = function() {
+    self.increment = function () {
         self.changeCount.call(this, 1);
     };
 
@@ -61,14 +61,22 @@
 
         localStorage.removeItem("orderItems");
     }
+
+    shouter.subscribe(function () {
+        this.destroy();
+    }, self, "destroyOrder");
+
+    shouter.subscribe(function (orderItem) {
+        this.addOrderItem(orderItem);
+    }, self, "addOrderItem");
 }
 
-window.sharedOrder = new OrderViewModel();
-
 $(document).ready(function () {
-    ko.applyBindings(window.sharedOrder, document.querySelector(".cart-icon"));
+    var orderViewModel = new OrderViewModel();
+
+    ko.applyBindings(orderViewModel, document.querySelector(".cart-icon"));
     var cart = document.querySelector(".cart");
     if (cart) {
-        ko.applyBindings(window.sharedOrder, cart);
+        ko.applyBindings(orderViewModel, cart);
     }
 });

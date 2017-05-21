@@ -26,7 +26,7 @@
         self.addOrderItem = function () {
             var newOrderItem = ko.toJS(self);
             newOrderItem.price = (newOrderItem.price * 1).toFixed(2);
-            sharedOrder.addOrderItem(newOrderItem);
+            shouter.notifySubscribers(newOrderItem, "addOrderItem");
         };
     }
 

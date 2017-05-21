@@ -11,6 +11,6 @@
 
 <script>
     $(document).ready(function () {
-        sharedOrder.destroy();
+        shouter.notifySubscribers(null, "destroyOrder");
     });
 </script>

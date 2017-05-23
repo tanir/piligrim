@@ -1,7 +1,7 @@
 ﻿function OrderViewModel() {
     var self = this;
     var items = JSON.parse(localStorage.getItem("orderItems")) || [];
-    var observableItems = items.map(item => {
+    var observableItems = items.map(function(item) {
         item.count = ko.observable(item.count);
         return item;
     });

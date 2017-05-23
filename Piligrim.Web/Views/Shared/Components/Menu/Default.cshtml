@@ -1,28 +1,39 @@
 ﻿@model MenuViewModel
 
-<ul class="list-group">
+<div class="panel-group" id="accordion">
     @foreach (var menuItem in Model.MenuItems)
     {
-        <li class="list-group-item">
-            @if (menuItem.HasChild)
-            {
-                <a class="dropdown-toggle" data-toggle="dropdown" href="@menuItem.Url">
-                    @menuItem.Title
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    @foreach (var child in menuItem.Child)
-                    {
-                        <li>
-                            <a href="@child.Url">@child.Title</a>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <a href="@menuItem.Url">@menuItem.Title</a>
-            }
-        </li>
+        if (menuItem.HasChild)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#@menuItem.Name">
+                            @menuItem.Title <span class="fa fa-chevron-right caret-closed"></span><span class="fa fa-chevron-down caret-opened"></span>
+                        </a>
+                    </div>
+                </div>
+                <div id="@menuItem.Name" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        @foreach (var child in menuItem.Child)
+                        {
+                            <li class="list-group-item">
+                                <a href="@child.Url">@child.Title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a href="@menuItem.Url">@menuItem.Title</a>
+                    </div>
+                </div>
+            </div>
+        }
     }
-</ul>
+</div>

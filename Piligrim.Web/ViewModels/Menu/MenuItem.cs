@@ -11,6 +11,8 @@ namespace Piligrim.Web.ViewModels.Menu
 
         public IEnumerable<MenuItem> Child { get; set; }
 
+        public string Name { get; set; }
+
         public bool HasChild => this.Child != null && this.Child.Any();
     }
 }

@@ -12,6 +12,7 @@ using Piligrim.Core.Mail;
 using Piligrim.Data;
 using Piligrim.Web.Configuration;
 using Piligrim.Web.Extensions;
+using Piligrim.Web.Infrastructure;
 
 namespace Piligrim.Web
 {
@@ -59,12 +60,15 @@ namespace Piligrim.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole();
+            var loggingConfig = this.Configuration.GetSection("Logging");
+            loggerFactory.AddConsole().AddFile(loggingConfig);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
             app.UseStaticFiles();
 

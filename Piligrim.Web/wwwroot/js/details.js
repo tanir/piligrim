@@ -1,4 +1,4 @@
-﻿$(document).ready(() => {
+﻿$(document).ready(function() {
 
     function AddOrderItemViewModel() {
         var self = this;

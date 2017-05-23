@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="logs\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Order\" />
     <Folder Include="Views\Orders\" />
@@ -42,6 +43,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.1.0-preview4-final" />
+    <PackageReference Include="NReco.Logging.File" Version="1.0.1" />
   </ItemGroup>
   
   <ItemGroup>

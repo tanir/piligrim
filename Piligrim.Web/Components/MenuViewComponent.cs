@@ -21,8 +21,7 @@ namespace Piligrim.Web.Components
             {
                 MenuItems = this.categoriesProvider.GetAll().Select(x => this.Build(x))
             };
-
-
+            
             return this.View(model);
         }
 
@@ -31,6 +30,7 @@ namespace Piligrim.Web.Components
             return new MenuItem
             {
                 Title = category.Title,
+                Name = category.Name,
                 Url = this.Url.Action("List", "Product", new { category = category.Name, parent = parent?.Name }),
                 Child = category.Child.Any()
                     ? category.Child.Select(x => Build(x, category))

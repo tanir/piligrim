@@ -71,3 +71,18 @@
 .logout-btn {
     margin-left: 15px;
 }
+
+[data-toggle].collapsed .caret-closed {
+    display: inline-block;
+}
+
+[data-toggle].collapsed .caret-opened {
+    display: none;
+}
+
+[data-toggle] .caret-opened {
+    display: inline-block;
+}
+[data-toggle] .caret-closed {
+    display: none;
+}

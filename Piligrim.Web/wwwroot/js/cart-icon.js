@@ -1,7 +1,7 @@
 ﻿function OrderViewModel() {
     var self = this;
     var items = JSON.parse(localStorage.getItem("orderItems")) || [];
-    var observableItems = items.map(function(item) {
+    var observableItems = items.map(function (item) {
         item.count = ko.observable(item.count);
         return item;
     });
@@ -34,9 +34,22 @@
 
     self.addOrderItem = function (newOrder) {
 
-        self.items.push(newOrder);
+        addWithCheck(self.items, newOrder);
 
         localStorage.setItem("orderItems", ko.toJSON(self.items));
+    }
+
+    function addWithCheck(arr, newItem) {
+        var found = arr().find(function (item) {
+            return item.id === newItem.id && item.color === newItem.color && item.size === newItem.size;
+        });
+
+        if (found) {
+            found.count(found.count() + newItem.count);
+        } else {
+            newItem.count = ko.observable(newItem.count);
+            arr.push(newItem);
+        }
     }
 
     self.increment = function () {
@@ -76,7 +89,13 @@ $(document).ready(function () {
 
     ko.applyBindings(orderViewModel, document.querySelector(".cart-icon"));
     var cart = document.querySelector(".cart");
+    var cartModal = document.querySelector("#cart-modal");
+
     if (cart) {
         ko.applyBindings(orderViewModel, cart);
+    }
+
+    if (cartModal) {
+        ko.applyBindings(orderViewModel, cartModal);
     }
 });

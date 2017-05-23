@@ -57,7 +57,7 @@
                 <span class="label label-danger">@Model.Price.ToString("0.00") <span class="fa fa-rub"></span></span>
             </h2>
 
-            <form class="form-horizontal add-order-form" data-bind="submit: addOrderItem">
+            <form class="form-horizontal add-order-form" data-bind="submit: function(){ $('#cart-modal').modal(); addOrderItem();}">
                 <input type="hidden" name="thumbnail" value="@Model.Thumbnail" />
                 <input type="hidden" name="id" value="@Model.Id" />
                 <input type="hidden" name="price" value="@Model.Price" />
@@ -103,6 +103,60 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+<div id="cart-modal" class="modal fade">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Моя корзина</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Товар</th>
+                            <th>Наименование</th>
+                            <th>Цена</th>
+                            <th></th>
+                        </tr>
+                        <tbody data-bind="foreach: items">
+                        <tr>
+                            <td>
+                                <img data-bind="attr: { src: ('/image/100/75?url=' + thumbnail), alt: title}"/>
+                            </td>
+                            <td>
+                                <span data-bind="text: title"></span> <br/>
+                                Цвет: <b data-bind="text: color"></b> <br/>
+                                Размер: <b data-bind="text: size"></b> <br/>
+                                Количество: <b data-bind="text: count"></b>
+                            </td>
+                            <td>
+                                <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
+                            </td>
+                            <td>
+                                <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <p class="total"><b>Итого: <span data-bind="text: cost"></span> <span class="fa fa-rub"></span></b></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Продолжить покупки</button>
+                    <a asp-action="Index" asp-controller="Order" class="btn btn-danger">Оформить заказ</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

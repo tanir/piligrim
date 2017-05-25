@@ -12,6 +12,9 @@ namespace Piligrim.Web.ViewModels.Cart
         [Required(ErrorMessage = "Укажите номер телефона")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Введите ваш ФИО")]
+        public string CustomerName { get; set; }
+
         public string Address { get; set; }
 
         public string Comment { get; set; }

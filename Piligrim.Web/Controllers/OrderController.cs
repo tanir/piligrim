@@ -48,6 +48,7 @@ namespace Piligrim.Web.Controllers
 
             var order = new Order
             {
+                CustomerName = model.CustomerName,
                 Address = model.Address,
                 Comment = model.Comment,
                 Delivery = model.Delivery,
@@ -68,10 +69,11 @@ namespace Piligrim.Web.Controllers
 
             var added = await this.ordersRepository.Add(order).ConfigureAwait(false);
 
-            await this.emailService.SendEmailAsync(order.Email, "Новый заказ из Piligrim",
-                $"Вами сделан заказ {added.Id}. Скоро с вами свяжутся наши сотрудники. Команда Piligrim {this.appSettings.Value.PhoneNumber}");
+            await this.emailService.Send(order, this.appSettings.Value.EmailForOrders, this.appSettings.Value.PhoneNumber);
 
-            await this.emailService.SendEmailAsync(this.appSettings.Value.EmailForOrders, "Поступил новый заказ",
+            await this.emailService.Send(
+                this.appSettings.Value.EmailForOrders,
+                "Поступил новый заказ",
                 $"Поступил новый заказ {added.Id}");
 
             return this.RedirectToAction("Success", new SuccessViewModel { OrderId = added.Id });

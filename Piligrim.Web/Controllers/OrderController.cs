@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Piligrim.Core.Data;
@@ -16,17 +18,20 @@ namespace Piligrim.Web.Controllers
         private readonly IProductsRepository productsRepository;
         private readonly IEmailService emailService;
         private readonly IOptions<AppSettings> appSettings;
+        private readonly IHostingEnvironment env;
 
         public OrderController(
             IOrdersRepository ordersRepository,
             IProductsRepository productsRepository,
             IEmailService emailService,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            IHostingEnvironment env)
         {
             this.ordersRepository = ordersRepository;
             this.productsRepository = productsRepository;
             this.emailService = emailService;
             this.appSettings = appSettings;
+            this.env = env;
         }
 
         public IActionResult Index()
@@ -69,7 +74,14 @@ namespace Piligrim.Web.Controllers
 
             var added = await this.ordersRepository.Add(order).ConfigureAwait(false);
 
-            await this.emailService.Send(order, this.appSettings.Value.EmailForOrders, this.appSettings.Value.PhoneNumber);
+
+            var templatePath = Path.Combine(this.env.ContentRootPath, $"Emails/NewOrder.cshtml");
+
+            await this.emailService.Send(
+                order,
+                this.appSettings.Value.EmailForOrders,
+                this.appSettings.Value.PhoneNumber,
+                templatePath);
 
             await this.emailService.Send(
                 this.appSettings.Value.EmailForOrders,

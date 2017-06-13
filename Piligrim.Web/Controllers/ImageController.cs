@@ -22,36 +22,42 @@ namespace Piligrim.Web.Controllers
 
         public async Task<IActionResult> Index(string url, int width, int height, string mode)
         {
-            Stream stream;
+            using (var stream = await GetFileStream(url))
+            {
+                using (var image = Image.Load(stream))
+                {
+                    var resized = image.Resize(new ResizeOptions
+                    {
+                        Mode = mode == "pad" ? ResizeMode.Pad : ResizeMode.BoxPad,
+                        Size = new Size {Height = height, Width = width}
+                    });
 
+                    var outputStream = new MemoryStream();
+                    resized.Save(outputStream);
+
+                    outputStream.Seek(0, SeekOrigin.Begin);
+
+                    return this.File(outputStream, "image/jpeg");
+                }
+            }
+        }
+
+        [NonAction]
+        private async Task<Stream> GetFileStream(string url)
+        {
             if (url.StartsWith("http"))
             {
                 var httpClient = new HttpClient();
 
                 var response = await httpClient.GetAsync(url);
 
-                stream = await response.Content.ReadAsStreamAsync();
+                return await response.Content.ReadAsStreamAsync();
             }
             else
             {
                 var path = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
-                stream = new FileStream(path, FileMode.Open);
-            }
 
-            using (var image = Image.Load(stream))
-            {
-                var resized = image.Resize(new ResizeOptions
-                {
-                    Mode = mode == "pad" ? ResizeMode.Pad : ResizeMode.BoxPad,
-                    Size = new Size { Height = height, Width = width }
-                });
-
-                var outputStream = new MemoryStream();
-                resized.Save(outputStream);
-
-                outputStream.Seek(0, SeekOrigin.Begin);
-
-                return this.File(outputStream, "image/jpeg");
+                return new FileStream(path, FileMode.Open);
             }
         }
     }

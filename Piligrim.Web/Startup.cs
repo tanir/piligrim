@@ -83,7 +83,7 @@ namespace Piligrim.Web
 
             app.UseMvcWithDefaultRoute();
 
-            DbInitializer.Initialize(app.ApplicationServices.GetService<StoreDbContext>());
+            //DbInitializer.Initialize(app.ApplicationServices.GetService<StoreDbContext>());
         }
     }
 }

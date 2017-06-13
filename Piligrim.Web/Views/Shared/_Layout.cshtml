@@ -33,6 +33,7 @@
                         </button>
                         <a class="navbar-brand" href="/"><b>PILIGRIM</b></a>
                     </div>
+                    
                     <div class="collapse navbar-collapse" id="myNavbar">
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -42,7 +43,6 @@
                                 </a>
                             </div>
                         }
-
                         <div class="navbar-right">
                             <a asp-action="Index" asp-controller="Order" class="btn btn-default navbar-btn cart-icon">
                                 <span class="fa fa-shopping-cart"></span>
@@ -52,6 +52,9 @@
 
                         <div class="navbar-right">
                             @await Component.InvokeAsync("Search")
+                        </div>
+                        <div class="navbar-right navbar-text">
+                            <span class="fa fa-phone"></span> <a href="tel:+79876222740">8(987)622-27-40</a> <span class="fa fa-phone"></span> <a href="tel:+79177994990">8(917)799-49-90</a>
                         </div>
                         <div class="navbar-right visible-xs-block">
                             @await Component.InvokeAsync("Menu")
@@ -73,7 +76,7 @@
                 <div class="container-fluid">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a asp-controller="Content" asp-action="Index" asp-route-page="kak-sdelat-zakaz"><span class="fa fa-shopping-cart"></span> Как сделать заказ</a>
+                            <a asp-controller="Content" asp-action="Index" asp-route-page="optovikam"><span class="fa fa-shopping-cart"></span> Оптовикам</a>
                         </li>
                         <li>
                             <a asp-controller="Content" asp-action="Index" asp-route-page="kak-oplatit-zakaz"><span class="fa fa-credit-card"></span> Как оплатить товар</a>
@@ -87,13 +90,13 @@
 
                     </ul>
                     <div class="navbar-form navbar-right">
-                        <a class="btn btn-social-icon btn-vk" href="#">
+                        <a class="btn btn-social-icon btn-vk" target="_blank" href="https://vk.com/club36401814">
                             <span class="fa fa-vk"></span>
                         </a>
-                        <a class="btn btn-social-icon btn-facebook" href="#">
+                        <a class="btn btn-social-icon btn-facebook" target="_blank" href="https://www.facebook.com/Piligrimshop-1317670828354410/">
                             <span class="fa fa-facebook"></span>
                         </a>
-                        <a class="btn btn-social-icon btn-instagram" href="#">
+                        <a class="btn btn-social-icon btn-instagram" target="_blank" href="https://www.instagram.com/piligrim_ru/">
                             <span class="fa fa-instagram"></span>
                         </a>
                     </div>

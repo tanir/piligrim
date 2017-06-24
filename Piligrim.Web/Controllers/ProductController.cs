@@ -66,7 +66,7 @@ namespace Piligrim.Web.Controllers
                     ))
                     .ToDictionary(x => x.Key, x => x.Value),
                 Title = product.Title,
-                Description = product.Description,
+                Description = product.Description.Replace("\r\n", "<br/>"),
                 Price = product.Price,
                 Photos = product.Photos.Select(x => x.Uri).ToList(),
                 Sizes = product.Sizes.Select(x => x.Value).ToList(),

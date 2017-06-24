@@ -28,8 +28,8 @@ namespace Piligrim.Web.Controllers
                 {
                     var resized = image.Resize(new ResizeOptions
                     {
-                        Mode = mode == "pad" ? ResizeMode.Pad : ResizeMode.BoxPad,
-                        Size = new Size {Height = height, Width = width}
+                        Mode = ResizeMode.Crop,
+                        Size = new Size { Height = height, Width = width }
                     });
 
                     var outputStream = new MemoryStream();

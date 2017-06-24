@@ -11,11 +11,8 @@ namespace Piligrim.Web.ViewModels.Product
         public string Title { get; set; }
 
         [Required]
-        public string Sizes { get; set; }
-
-        [Required]
-        public string Colors { get; set; }
-
+        public string SizeColors { get; set; }
+        
         [Required]
         public decimal Price { get; set; }
 

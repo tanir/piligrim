@@ -59,7 +59,12 @@ namespace Piligrim.Web.Controllers
             var model = new ProductDetailsViewModel
             {
                 Id = product.Id,
-                Colors = product.Colors.Select(x => x.Value).ToList(),
+                SizeColors = product.Sizes.Select(x => new KeyValuePair<string, IEnumerable<string>>
+                    (
+                        x.Value,
+                        x.Colors.Select(y => y.Value).ToList()
+                    ))
+                    .ToDictionary(x => x.Key, x => x.Value),
                 Title = product.Title,
                 Description = product.Description,
                 Price = product.Price,
@@ -86,8 +91,8 @@ namespace Piligrim.Web.Controllers
                 {
                     Id = product.Id,
                     Title = product.Title,
-                    Colors = string.Join(";", product.Colors.Select(x => x.Value)),
-                    Sizes = string.Join(";", product.Sizes.Select(x => x.Value)),
+                    SizeColors = string.Join(";", product.Sizes
+                        .Select(x => x.Value + ":" + string.Join(",", x.Colors.Select(y => y.Value)))),
                     Price = product.Price,
                     Thumbnail = product.Thumbnail,
                     Photos = product.Photos?.Select(x => x.Uri).ToList() ?? new List<string>(),
@@ -127,12 +132,21 @@ namespace Piligrim.Web.Controllers
 
             product.Title = model.Title;
             product.Price = model.Price;
-            product.Colors = model.Colors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => new Color { Value = x })
-                .ToList();
 
-            product.Sizes = model.Sizes.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => new Size { Value = x })
+            product.Sizes = model.SizeColors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x =>
+                {
+                    var chunks = x.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    return new Size
+                    {
+                        Value = chunks[0],
+                        Colors = chunks[1]
+                            .Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(y => new Color { Value = y })
+                            .ToList()
+                    };
+                })
                 .ToList();
 
             product.Category = model.Category;
@@ -180,7 +194,7 @@ namespace Piligrim.Web.Controllers
 
             return this.RedirectToAction("CreateOrEdit", new { id = model.ProductId });
         }
-        
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePhoto(int productId, string photoUri)
         {

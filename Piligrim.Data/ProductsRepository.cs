@@ -43,16 +43,18 @@ namespace Piligrim.Data
 
         public Task<Product> Get(int id)
         {
-            return this.dbContext.Products.Include(x => x.Colors)
+            return this.dbContext.Products
                 .Include(x => x.Sizes)
+                .ThenInclude(x => x.Colors)
                 .Include(x => x.Photos)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IDictionary<int, Product>> Get(int[] ids)
         {
-            var products = await this.dbContext.Products.Include(x => x.Colors)
+            var products = await this.dbContext.Products
                 .Include(x => x.Sizes)
+                .ThenInclude(x => x.Colors)
                 .Include(x => x.Photos)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync()

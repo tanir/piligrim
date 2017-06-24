@@ -1,8 +1,12 @@
 ﻿
+@using NuGet.Protocol.Core.v3
 @model ProductDetailsViewModel
 @{
     ViewData["Title"] = Model.Title;
 }
+<script>
+    var sizeColors = @Html.Raw(Model.SizeColors.ToJson());
+</script>
 <div class="container-fluid product-details">
     @if (User.IsInRole("Admin"))
     {
@@ -77,12 +81,11 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4">Цвет</label>
                     <div class="col-sm-6">
-                        <select class="form-control" data-bind="value: color">
+                        <select class="form-control" data-bind="value: color, disable: !colorsEnabled()">
                             <option disabled selected>Выберите цвет</option>
-                            @foreach (var color in Model.Colors)
-                            {
-                                <option value="@color">@color</option>
-                            }
+                            <!-- ko foreach: colors -->
+                                <option data-bind="text: $data, value: $data"></option>
+                            <!-- /ko -->
                         </select>
                     </div>
                 </div>

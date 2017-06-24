@@ -20,6 +20,6 @@ namespace Piligrim.Web.ViewModels.Product
 
         public IEnumerable<string> Sizes { get; set; }
 
-        public IEnumerable<string> Colors { get; set; }
+        public IDictionary<string, IEnumerable<string>> SizeColors { get; set; }
     }
 }

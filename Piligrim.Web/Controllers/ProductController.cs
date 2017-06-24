@@ -71,7 +71,8 @@ namespace Piligrim.Web.Controllers
                 Photos = product.Photos.Select(x => x.Uri).ToList(),
                 Sizes = product.Sizes.Select(x => x.Value).ToList(),
                 Thumbnail = product.Thumbnail,
-                Deleted = product.Deleted
+                Deleted = product.Deleted,
+                Unit = product.Unit
             };
 
             return this.View(model);
@@ -97,7 +98,8 @@ namespace Piligrim.Web.Controllers
                     Thumbnail = product.Thumbnail,
                     Photos = product.Photos?.Select(x => x.Uri).ToList() ?? new List<string>(),
                     Category = product.Category,
-                    Description = product.Description
+                    Description = product.Description,
+                    Unit = product.Unit
                 };
             }
             else
@@ -151,6 +153,7 @@ namespace Piligrim.Web.Controllers
 
             product.Category = model.Category;
             product.Description = model.Description;
+            product.Unit = model.Unit;
 
             await (model.Id.HasValue
                 ? this.productsRepository.Update(product)

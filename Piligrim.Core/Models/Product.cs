@@ -20,6 +20,8 @@ namespace Piligrim.Core.Models
 
         public bool Deleted { get; set; }
 
+        public string Unit { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Timestamp { get; set; }
 

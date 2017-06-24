@@ -21,5 +21,7 @@ namespace Piligrim.Web.ViewModels.Product
         public IEnumerable<string> Sizes { get; set; }
 
         public IDictionary<string, IEnumerable<string>> SizeColors { get; set; }
+
+        public string Unit { get; set; }
     }
 }

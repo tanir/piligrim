@@ -25,5 +25,7 @@ namespace Piligrim.Web.ViewModels.Product
         public List<string> Photos { get; set; }
 
         public string Thumbnail { get; set; }
+
+        public string Unit { get; set; }
     }
 }

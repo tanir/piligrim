@@ -58,7 +58,7 @@
 
             <h1>@Model.Title</h1>
             <h2>
-                <span class="label label-danger">@Model.Price.ToString("0.00") <span class="fa fa-rub"></span></span>
+                <span class="label label-danger">@Model.Price.ToString("0.00") <span class="fa fa-rub"></span>@(Model.Unit != null ? $"/{Model.Unit}" : string.Empty)</span>
             </h2>
 
             <form class="form-horizontal add-order-form" data-bind="submit: function(){ $('#cart-modal').modal(); addOrderItem();}">
@@ -84,7 +84,7 @@
                         <select class="form-control" data-bind="value: color, disable: !colorsEnabled()">
                             <option disabled selected>Выберите цвет</option>
                             <!-- ko foreach: colors -->
-                                <option data-bind="text: $data, value: $data"></option>
+                            <option data-bind="text: $data, value: $data"></option>
                             <!-- /ko -->
                         </select>
                     </div>
@@ -128,23 +128,23 @@
                             <th></th>
                         </tr>
                         <tbody data-bind="foreach: items">
-                        <tr>
-                            <td>
-                                <img data-bind="attr: { src: ('/image/100/75?url=' + thumbnail), alt: title}"/>
-                            </td>
-                            <td>
-                                <span data-bind="text: title"></span> <br/>
-                                Цвет: <b data-bind="text: color"></b> <br/>
-                                Размер: <b data-bind="text: size"></b> <br/>
-                                Количество: <b data-bind="text: count"></b>
-                            </td>
-                            <td>
-                                <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
-                            </td>
-                            <td>
-                                <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <img data-bind="attr: { src: ('/image/100/75?url=' + thumbnail), alt: title}" />
+                                </td>
+                                <td>
+                                    <span data-bind="text: title"></span> <br />
+                                    Цвет: <b data-bind="text: color"></b> <br />
+                                    Размер: <b data-bind="text: size"></b> <br />
+                                    Количество: <b data-bind="text: count"></b>
+                                </td>
+                                <td>
+                                    <b><span data-bind="text: price"></span> <span class="fa fa-rub"></span></b>
+                                </td>
+                                <td>
+                                    <button data-bind="click: $parent.removeOrderItem" class="btn btn-link btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -26,7 +26,7 @@ namespace Piligrim.Core.Models
         public DateTime Timestamp { get; set; }
 
         public virtual ICollection<Photo> Photos { get; set; }
-        
-        public virtual ICollection<Size> Sizes { get; set; } = new List<Size>();
+
+        public virtual ICollection<Color> Colors { get; set; }
     }
 }

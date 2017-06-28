@@ -59,17 +59,16 @@ namespace Piligrim.Web.Controllers
             var model = new ProductDetailsViewModel
             {
                 Id = product.Id,
-                SizeColors = product.Sizes.Select(x => new KeyValuePair<string, IEnumerable<string>>
+                ColorSizes = product.Colors.Select(x => new KeyValuePair<string, IEnumerable<string>>
                     (
                         x.Value,
-                        x.Colors.Select(y => y.Value).ToList()
+                        x.Sizes.Select(y => y.Value).ToList()
                     ))
                     .ToDictionary(x => x.Key, x => x.Value),
                 Title = product.Title,
                 Description = product.Description.Replace("\r\n", "<br/>"),
                 Price = product.Price,
                 Photos = product.Photos.Select(x => x.Uri).ToList(),
-                Sizes = product.Sizes.Select(x => x.Value).ToList(),
                 Thumbnail = product.Thumbnail,
                 Deleted = product.Deleted,
                 Unit = product.Unit
@@ -92,8 +91,8 @@ namespace Piligrim.Web.Controllers
                 {
                     Id = product.Id,
                     Title = product.Title,
-                    SizeColors = string.Join(";", product.Sizes
-                        .Select(x => x.Value + ":" + string.Join(",", x.Colors.Select(y => y.Value)))),
+                    SizeColors = string.Join(";", product.Colors
+                        .Select(x => x.Value + ":" + string.Join(",", x.Sizes.Select(y => y.Value)))),
                     Price = product.Price,
                     Thumbnail = product.Thumbnail,
                     Photos = product.Photos?.Select(x => x.Uri).ToList() ?? new List<string>(),
@@ -135,17 +134,17 @@ namespace Piligrim.Web.Controllers
             product.Title = model.Title;
             product.Price = model.Price;
 
-            product.Sizes = model.SizeColors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+            product.Colors = model.SizeColors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x =>
                 {
                     var chunks = x.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 
-                    return new Size
+                    return new Color
                     {
                         Value = chunks[0],
-                        Colors = chunks[1]
+                        Sizes = chunks[1]
                             .Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(y => new Color { Value = y })
+                            .Select(y => new Size { Value = y })
                             .ToList()
                     };
                 })

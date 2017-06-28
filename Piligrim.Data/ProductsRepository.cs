@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
-    public class ProductsRepository : IProductsRepository
+    public class ProductsRepository : IProductsRepository, IDisposable
     {
         private readonly StoreDbContext dbContext;
 
@@ -44,8 +45,8 @@ namespace Piligrim.Data
         public Task<Product> Get(int id)
         {
             return this.dbContext.Products
-                .Include(x => x.Sizes)
-                .ThenInclude(x => x.Colors)
+                .Include(x => x.Colors)
+                .ThenInclude(x => x.Sizes)
                 .Include(x => x.Photos)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -53,8 +54,8 @@ namespace Piligrim.Data
         public async Task<IDictionary<int, Product>> Get(int[] ids)
         {
             var products = await this.dbContext.Products
-                .Include(x => x.Sizes)
-                .ThenInclude(x => x.Colors)
+                .Include(x => x.Colors)
+                .ThenInclude(x => x.Sizes)
                 .Include(x => x.Photos)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync()
@@ -73,6 +74,12 @@ namespace Piligrim.Data
         {
             this.dbContext.Products.Update(product);
             return this.dbContext.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            this.dbContext.SaveChanges();
+            this.dbContext?.Dispose();
         }
     }
 }

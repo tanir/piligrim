@@ -5,7 +5,7 @@
     ViewData["Title"] = Model.Title;
 }
 <script>
-    var sizeColors = @Html.Raw(Model.SizeColors.ToJson());
+    var colorSizes = @Html.Raw(Model.ColorSizes.ToJson());
 </script>
 <div class="container-fluid product-details">
     @if (User.IsInRole("Admin"))
@@ -61,32 +61,30 @@
                 <span class="label label-danger">@Model.Price.ToString("0.00") <span class="fa fa-rub"></span>@(Model.Unit != null ? $"/{Model.Unit}" : string.Empty)</span>
             </h2>
 
-            <form class="form-horizontal add-order-form" data-bind="submit: function(){ $('#cart-modal').modal(); addOrderItem();}">
+            <form class="form-horizontal add-order-form" data-bind="submit: function(){ if(!$('form.add-order-form').valid()) { return; } $('#cart-modal').modal(); addOrderItem();}">
                 <input type="hidden" name="thumbnail" value="@Model.Thumbnail" />
                 <input type="hidden" name="id" value="@Model.Id" />
                 <input type="hidden" name="price" value="@Model.Price" />
                 <input type="hidden" name="title" value="@Model.Title" />
                 <div class="form-group">
-                    <label class="control-label col-sm-4 text-left">Размер</label>
+                    <label class="control-label col-sm-4 text-left">Цвет</label>
                     <div class="col-sm-6">
-                        <select class="form-control" data-bind="value: size">
-                            <option disabled selected>Выберите размер</option>
-                            @foreach (var size in Model.Sizes)
+                        <select class="form-control" name="color" data-bind="value: color" required data-msg="Выберите цвет">
+                            <option disabled selected>Выберите цвет</option>
+                            @foreach (var color in Model.ColorSizes)
                             {
-                                <option value="@size">@size</option>
+                                <option value="@color.Key">@color.Key</option>
                             }
                         </select>
+                        <label for="color" class="error text-danger" style="display: none">Выберите цвет</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4">Цвет</label>
+                    <label class="control-label col-sm-4">Размер</label>
                     <div class="col-sm-6">
-                        <select class="form-control" data-bind="value: color, disable: !colorsEnabled()">
-                            <option disabled selected>Выберите цвет</option>
-                            <!-- ko foreach: colors -->
-                            <option data-bind="text: $data, value: $data"></option>
-                            <!-- /ko -->
+                        <select class="form-control" name="size" data-bind="value: size, disable: !sizesEnabled(), options: sizes" required data-msg="Выберите размер">
                         </select>
+                        <label for="size" class="error text-danger" style="display: none">Выберите размер</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,9 +92,10 @@
                     <div class="col-sm-8">
                         <div class="input-group icrementer">
                             <span class="input-group-addon btn" data-bind="click: function(){changeCount(-1)}"><span class="glyphicon glyphicon-minus"></span> </span>
-                            <input type="text" class="form-control" data-bind="value: count" />
+                            <input type="text" name="count" class="form-control" data-bind="value: count" required data-msg="Укажите количество"/>
                             <span class="input-group-addon btn" data-bind="click: function(){changeCount(1)}"><span class="glyphicon glyphicon-plus"></span></span>
                         </div>
+                        <label for="count" class="error text-danger" style="display: none">Укажите количество</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -166,4 +165,5 @@
 @section head
 {
     <script src="~/js/details.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
 }

@@ -48,9 +48,9 @@ namespace Piligrim.Web
 
             services.AddProductsDbContext(this.Configuration.GetConnectionString("products-db"));
 
-            services.AddSingleton<IProductsRepository, ProductsRepository>();
+            services.AddTransient<IProductsRepository, ProductsRepository>();
 
-            services.AddSingleton<IOrdersRepository, OrdersRepository>();
+            services.AddTransient<IOrdersRepository, OrdersRepository>();
 
             services.AddSingleton<IEmailService, EmailService>();
 
@@ -63,10 +63,10 @@ namespace Piligrim.Web
             var loggingConfig = this.Configuration.GetSection("Logging");
             loggerFactory.AddConsole().AddFile(loggingConfig);
 
-            //if (env.IsDevelopment())
-            //{
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
-            //}
+            }
 
             app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 

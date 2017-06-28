@@ -18,9 +18,7 @@ namespace Piligrim.Web.ViewModels.Product
 
         public bool Deleted { get; set; }
 
-        public IEnumerable<string> Sizes { get; set; }
-
-        public IDictionary<string, IEnumerable<string>> SizeColors { get; set; }
+        public IDictionary<string, IEnumerable<string>> ColorSizes { get; set; }
 
         public string Unit { get; set; }
     }

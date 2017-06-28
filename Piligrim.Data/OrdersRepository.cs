@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
-    public class OrdersRepository : IOrdersRepository
+    public class OrdersRepository : IOrdersRepository,IDisposable
     {
         private readonly StoreDbContext context;
 
@@ -45,6 +46,13 @@ namespace Piligrim.Data
         {
             this.context.Orders.Update(order);
             return this.context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            this.context.SaveChanges();
+
+            this.context?.Dispose();
         }
     }
 }

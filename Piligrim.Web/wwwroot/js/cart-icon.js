@@ -2,7 +2,7 @@
     var self = this;
     var items = JSON.parse(localStorage.getItem("orderItems")) || [];
     var observableItems = items.map(function (item) {
-        item.count = ko.observable(item.count);
+        item.count = ko.observable(item.count*1);
         return item;
     });
 

@@ -63,7 +63,7 @@ namespace Piligrim.Web
             var loggingConfig = this.Configuration.GetSection("Logging");
             loggerFactory.AddConsole().AddFile(loggingConfig);
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || this.Configuration.GetValue<bool>("displayErrors"))
             {
                 app.UseDeveloperExceptionPage();
             }

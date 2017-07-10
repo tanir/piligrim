@@ -18,10 +18,15 @@ namespace Piligrim.Web.Controllers
         }
 
         [Route("/image/{width}/{height}/{mode=pad}")]
-        [ResponseCache(Duration = 60 * 60 * 24 * 30, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 60 * 60 * 24 * 30, Location = ResponseCacheLocation.Client)]
 
         public async Task<IActionResult> Index(string url, int width, int height, string mode)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                return this.BadRequest();
+            }
+
             using (var stream = await GetFileStream(url))
             {
                 using (var image = Image.Load(stream))
@@ -33,10 +38,11 @@ namespace Piligrim.Web.Controllers
                     });
 
                     var outputStream = new MemoryStream();
+                    this.Response.RegisterForDispose(outputStream);
                     resized.Save(outputStream);
 
                     outputStream.Seek(0, SeekOrigin.Begin);
-
+                    
                     return this.File(outputStream, "image/jpeg");
                 }
             }

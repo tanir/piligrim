@@ -27,8 +27,7 @@ namespace Piligrim.Web.Infrastructure
             }
             catch (Exception ex)
             {
-                this.logger.LogError(0, ex, "Произошла ошибка");
-                throw;
+                this.logger.LogError(0, ex, $"Произошла ошибка при обработке запроса [{context.Request}]");
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Piligrim.Web.Controllers
         }
 
         [Route("/image/{width}/{height}/{mode=pad}")]
-        [ResponseCache(Duration = 60 * 60 * 24 * 30, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 60 * 60 * 24 * 30, Location = ResponseCacheLocation.Any)]
 
         public async Task<IActionResult> Index(string url, int width, int height, string mode)
         {
@@ -62,7 +62,7 @@ namespace Piligrim.Web.Controllers
             else
             {
                 var path = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
-
+                
                 return new FileStream(path, FileMode.Open);
             }
         }

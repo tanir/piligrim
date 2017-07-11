@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Piligrim.Core;
 using Piligrim.Core.Data;
 using Piligrim.Core.Models;
 
 namespace Piligrim.Data
 {
-    public class ProductsRepository : IProductsRepository, IDisposable
+    public class ProductsRepository : IProductsRepository
     {
         private readonly StoreDbContext dbContext;
 
@@ -74,12 +73,6 @@ namespace Piligrim.Data
         {
             this.dbContext.Products.Update(product);
             return this.dbContext.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-            this.dbContext.SaveChanges();
-            this.dbContext?.Dispose();
         }
     }
 }

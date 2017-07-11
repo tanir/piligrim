@@ -48,13 +48,13 @@ namespace Piligrim.Web
 
             services.AddProductsDbContext(this.Configuration.GetConnectionString("products-db"));
 
-            services.AddTransient<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
 
-            services.AddTransient<IOrdersRepository, OrdersRepository>();
+            services.AddScoped<IOrdersRepository, OrdersRepository>();
 
-            services.AddSingleton<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
 
-            services.AddSingleton<ICategoriesProvider, StaticCategoriesProvider>();
+            services.AddScoped<ICategoriesProvider, StaticCategoriesProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

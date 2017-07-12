@@ -1,20 +1,25 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ImageSharp;
 using ImageSharp.Processing;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Piligrim.Web.Controllers
 {
     public class ImageController : Controller
     {
+        private readonly ILogger logger;
         private readonly IHostingEnvironment env;
 
-        public ImageController(IHostingEnvironment env)
+        public ImageController(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             this.env = env;
+            this.logger = loggerFactory.
+                CreateLogger<ImageController>();
         }
 
         [Route("/image/{width}/{height}/{mode=pad}")]
@@ -27,43 +32,64 @@ namespace Piligrim.Web.Controllers
                 return this.BadRequest();
             }
 
-            using (var stream = await GetFileStream(url))
+            try
             {
-                using (var image = Image.Load(stream))
+                using (var stream = await GetStream(url))
                 {
-                    var resized = image.Resize(new ResizeOptions
+                    using (var image = Image.Load(stream))
                     {
-                        Mode = ResizeMode.Crop,
-                        Size = new Size { Height = height, Width = width }
-                    });
+                        stream.Dispose();
 
-                    var outputStream = new MemoryStream();
-                    this.Response.RegisterForDispose(outputStream);
-                    resized.Save(outputStream);
+                        var outputStream = new MemoryStream();
 
-                    outputStream.Seek(0, SeekOrigin.Begin);
-                    
-                    return this.File(outputStream, "image/jpeg");
+                        using (var resized = image.Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Crop,
+                            Size = new Size { Height = height, Width = width }
+                        }))
+                        {
+                            this.Response.RegisterForDispose(outputStream);
+                            resized.SaveAsJpeg(outputStream);
+                        }
+
+                        outputStream.Seek(0, SeekOrigin.Begin);
+
+                        return this.File(outputStream, "image/jpeg");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
+                return this.StatusCode(500);
             }
         }
 
         [NonAction]
-        private async Task<Stream> GetFileStream(string url)
+        private async Task<MemoryStream> GetStream(string url)
         {
             if (url.StartsWith("http"))
             {
                 var httpClient = new HttpClient();
 
-                var response = await httpClient.GetAsync(url);
+                var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseContentRead);
 
-                return await response.Content.ReadAsStreamAsync();
+                return (MemoryStream)await response.Content.ReadAsStreamAsync();
             }
             else
             {
                 var path = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
-                
-                return new FileStream(path, FileMode.Open);
+
+                using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous))
+                {
+                    var result = new MemoryStream();
+
+                    await fileStream.CopyToAsync(result);
+
+                    result.Seek(0, SeekOrigin.Begin);
+
+                    return result;
+                }
             }
         }
     }

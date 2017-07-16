@@ -45,7 +45,7 @@ namespace Piligrim.Web.Controllers
                         using (var resized = image.Resize(new ResizeOptions
                         {
                             Mode = ResizeMode.Crop,
-                            Size = new Size { Height = height, Width = width }
+                            Size = new SixLabors.Primitives.Size { Width = width, Height = height }
                         }))
                         {
                             this.Response.RegisterForDispose(outputStream);

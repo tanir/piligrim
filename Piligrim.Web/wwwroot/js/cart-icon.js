@@ -40,7 +40,7 @@
     }
 
     function addWithCheck(arr, newItem) {
-        var found = arr().find(function (item) {
+        var found = ko.utils.arrayFirst(arr(), function (item) {
             return item.id === newItem.id && item.color === newItem.color && item.size === newItem.size;
         });
 

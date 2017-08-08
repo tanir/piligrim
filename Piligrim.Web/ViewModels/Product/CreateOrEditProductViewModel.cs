@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Piligrim.Web.ViewModels.Product
@@ -11,8 +12,8 @@ namespace Piligrim.Web.ViewModels.Product
         public string Title { get; set; }
 
         [Required]
-        public string SizeColors { get; set; }
-        
+        public SizeColor SizeColors { get; set; }
+
         [Required]
         public decimal Price { get; set; }
 

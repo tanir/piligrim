@@ -91,8 +91,7 @@ namespace Piligrim.Web.Controllers
                 {
                     Id = product.Id,
                     Title = product.Title,
-                    SizeColors = string.Join(";", product.Colors
-                        .Select(x => x.Value + ":" + string.Join(",", x.Sizes.Select(y => y.Value)))),
+                    SizeColors = new SizeColor { Values = product.Colors },
                     Price = product.Price,
                     Thumbnail = product.Thumbnail,
                     Photos = product.Photos?.Select(x => x.Uri).ToList() ?? new List<string>(),
@@ -134,21 +133,7 @@ namespace Piligrim.Web.Controllers
             product.Title = model.Title;
             product.Price = model.Price;
 
-            product.Colors = model.SizeColors.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x =>
-                {
-                    var chunks = x.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    return new Color
-                    {
-                        Value = chunks[0],
-                        Sizes = chunks[1]
-                            .Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(y => new Size { Value = y })
-                            .ToList()
-                    };
-                })
-                .ToList();
+            product.Colors = model.SizeColors.Values.ToList();
 
             product.Category = model.Category;
             product.Description = model.Description;

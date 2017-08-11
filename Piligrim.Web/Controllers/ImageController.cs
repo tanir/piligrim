@@ -12,6 +12,7 @@ namespace Piligrim.Web.Controllers
 {
     public class ImageController : Controller
     {
+        private static readonly object sync = new object();
         private readonly ILogger logger;
         private readonly IHostingEnvironment env;
 
@@ -25,43 +26,46 @@ namespace Piligrim.Web.Controllers
         [Route("/image/{width}/{height}/{mode=pad}")]
         [ResponseCache(Duration = 60 * 60 * 24 * 30, Location = ResponseCacheLocation.Any)]
 
-        public async Task<IActionResult> Index(string url, int width, int height, string mode)
+        public IActionResult Index(string url, int width, int height, string mode)
         {
-            if (string.IsNullOrEmpty(url))
+            lock (sync)
             {
-                return this.BadRequest();
-            }
-
-            try
-            {
-                using (var stream = await GetStream(url))
+                if (string.IsNullOrEmpty(url))
                 {
-                    using (var image = Image.Load(stream))
+                    return this.BadRequest();
+                }
+
+                try
+                {
+                    using (var stream = GetStream(url).Result)
                     {
-                        stream.Dispose();
-
-                        var outputStream = new MemoryStream();
-
-                        using (var resized = image.Resize(new ResizeOptions
+                        using (var image = Image.Load(stream))
                         {
-                            Mode = ResizeMode.Crop,
-                            Size = new SixLabors.Primitives.Size { Width = width, Height = height }
-                        }))
-                        {
-                            this.Response.RegisterForDispose(outputStream);
-                            resized.SaveAsJpeg(outputStream);
+                            stream.Dispose();
+
+                            var outputStream = new MemoryStream();
+
+                            using (var resized = image.Resize(new ResizeOptions
+                            {
+                                Mode = ResizeMode.Crop,
+                                Size = new SixLabors.Primitives.Size { Width = width, Height = height }
+                            }))
+                            {
+                                this.Response.RegisterForDispose(outputStream);
+                                resized.SaveAsJpeg(outputStream);
+                            }
+
+                            outputStream.Seek(0, SeekOrigin.Begin);
+
+                            return this.File(outputStream, "image/jpeg");
                         }
-
-                        outputStream.Seek(0, SeekOrigin.Begin);
-
-                        return this.File(outputStream, "image/jpeg");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
-                return this.StatusCode(500);
+                catch (Exception ex)
+                {
+                    this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
+                    return this.StatusCode(500);
+                }
             }
         }
 

@@ -1,11 +1,10 @@
 ﻿
-@using NuGet.Protocol.Core.v3
 @model ProductDetailsViewModel
 @{
     ViewData["Title"] = Model.Title;
 }
 <script>
-    var colorSizes = @Html.Raw(Model.ColorSizes.ToJson());
+    var colorSizes = @Html.Raw(Json.Serialize(Model.ColorSizes));
 </script>
 <div class="container-fluid product-details">
     @if (User.IsInRole("Admin"))
@@ -38,11 +37,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="fotorama" data-nav="thumbs">
-                        <img src="/image/400/300?url=@Model.Thumbnail" alt="@Model.Title" />
+                        <img src="/image/400/400?url=@Model.Thumbnail" alt="@Model.Title" />
 
                         @foreach (var photo in Model.Photos)
                         {
-                            <img src="/image/400/300?url=@photo" alt="@Model.Title" />
+                            <img src="/image/400/400?url=@photo" alt="@Model.Title" />
                         }
                     </div>
                 </div>

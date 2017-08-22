@@ -44,6 +44,12 @@ namespace Piligrim.Web
 
             services.Configure<AppSettings>(this.Configuration);
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/Login/");
+                options.AccessDeniedPath = new PathString("/Login/Forbidden/");
+            });
+
             services.AddMvc();
 
             services.AddProductsDbContext(this.Configuration.GetConnectionString("products-db"));
@@ -72,14 +78,7 @@ namespace Piligrim.Web
 
             app.UseStaticFiles();
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
-            {
-                AuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme,
-                LoginPath = new PathString("/Login/"),
-                AccessDeniedPath = new PathString("/Login/Forbidden/"),
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true
-            });
+            app.UseAuthentication();
 
             app.UseMvcWithDefaultRoute();
 

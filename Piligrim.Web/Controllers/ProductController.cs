@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Packaging;
 using Piligrim.Core.Categories;
 using Piligrim.Core.Data;
 using Piligrim.Core.Models;
@@ -167,7 +166,10 @@ namespace Piligrim.Web.Controllers
             {
                 var photoUris = await this.SaveFiles(model.Photos.ToArray()).ConfigureAwait(false);
 
-                product.Photos.AddRange(photoUris.Select(x => new Photo { Uri = x }));
+                foreach (var photo in photoUris.Select(x => new Photo { Uri = x }))
+                {
+                    product.Photos.Add(photo);
+                }
             }
 
             if (model.Thumbnail != null)

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog.Web;
 using Piligrim.Core;
 using Piligrim.Core.Categories;
 using Piligrim.Core.Data;
@@ -29,6 +31,8 @@ namespace Piligrim.Web
                 .AddEnvironmentVariables();
 
             this.Configuration = builder.Build();
+
+            env.ConfigureNLog("nlog.config");
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -61,13 +65,17 @@ namespace Piligrim.Web
             services.AddScoped<IEmailService, EmailService>();
 
             services.AddScoped<ICategoriesProvider, StaticCategoriesProvider>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            var loggingConfig = this.Configuration.GetSection("Logging");
-            loggerFactory.AddConsole().AddFile(loggingConfig);
+            loggerFactory.AddNLog();
+
+            //add NLog.Web
+            app.AddNLogWeb();
 
             if (env.IsDevelopment() || this.Configuration.GetValue<bool>("displayErrors"))
             {

@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ImageSharp;
-using ImageSharp.Processing;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
 namespace Piligrim.Web.Controllers
 {
@@ -45,15 +47,15 @@ namespace Piligrim.Web.Controllers
 
                             var outputStream = new MemoryStream();
 
-                            using (var resized = image.Resize(new ResizeOptions
+                            image.Mutate(x => x.Resize(new ResizeOptions
                             {
                                 Mode = ResizeMode.Crop,
-                                Size = new SixLabors.Primitives.Size { Width = width, Height = height }
-                            }))
-                            {
-                                this.Response.RegisterForDispose(outputStream);
-                                resized.SaveAsJpeg(outputStream);
-                            }
+                                Size = new Size { Width = width, Height = height }
+                            }));
+
+                            this.Response.RegisterForDispose(outputStream);
+                            image.SaveAsJpeg(outputStream);
+
 
                             outputStream.Seek(0, SeekOrigin.Begin);
 

@@ -75,14 +75,13 @@ namespace Piligrim.Web.Controllers
             var added = await this.ordersRepository.Add(order).ConfigureAwait(false);
 
 
-            var templatePath = "Emails\\NewOrder.cshtml";
+            var templatePath = "Emails/NewOrder.cshtml";
 
             await this.emailService.Send(
                 order,
                 this.appSettings.Value.EmailForOrders,
                 this.appSettings.Value.PhoneNumber,
-                templatePath,
-                env.ContentRootPath);
+                templatePath);
 
             await this.emailService.Send(
                 this.appSettings.Value.EmailForOrders,

@@ -1,16 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using FluentEmail.Core;
-using FluentEmail.Razor;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Piligrim.Core.Models;
 using Piligrim.Web.ViewModels.Emails;
 using RazorLight;
-using RazorLight.Extensions;
 
 namespace Piligrim.Core.Mail
 {
@@ -18,12 +14,19 @@ namespace Piligrim.Core.Mail
     {
         private readonly IOptions<MailConfiguration> configuration;
 
-        public EmailService(IOptions<MailConfiguration> configuration)
+        private readonly RazorLightEngine engine;
+
+        public EmailService(IOptions<MailConfiguration> configuration, IHostingEnvironment env)
         {
             this.configuration = configuration;
+
+            this.engine = new RazorLightEngineBuilder()
+                .UseFilesystemProject(env.ContentRootPath)
+                .UseMemoryCachingProvider()
+                .Build();
         }
 
-        public async Task Send(Order order, string shopEmail, string shopPhoneNumber, string templatePath, string rootPath)
+        public async Task Send(Order order, string shopEmail, string shopPhoneNumber, string templatePath)
         {
             var conf = this.configuration.Value;
 
@@ -50,9 +53,7 @@ namespace Piligrim.Core.Mail
                 }).ToList()
             };
 
-            var template = File.ReadAllText(templatePath);
-
-            var letter = EngineFactory.CreatePhysical(rootPath).ParseString(template, model, typeof(NewOrderViewModel));
+            var letter = await engine.CompileRenderAsync(templatePath, model).ConfigureAwait(false);
 
             var emailMessage = new MimeMessage();
 

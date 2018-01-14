@@ -1,11 +1,57 @@
-﻿@{
+﻿@using Piligrim.Web.ViewModels.Common
+@model FeedbackModel
+@{
     ViewData["Title"] = "Оптовикам";
 }
 
 <div class="container-fluid">
     <h1>Оптовикам</h1>
-
-    <p>
-        Для получения информации по условиям оптовых закупок, заполните форму обратной связи ниже. И мы свяжемся с Вами в ближайшее время.
-    </p>
+    <div class="row">
+        <p>
+            Для получения информации по условиям оптовых закупок, заполните форму обратной связи ниже. И мы свяжемся с Вами в ближайшее время.
+        </p>
+    </div>
+    <form class="form" asp-action="SendFeedback" method="post" asp-antiforgery="false">
+        <div class="row">
+            <div class="form-group">
+                <input class="form-control" asp-for="Name" placeholder="Имя"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="IsCompany" id="company" value="true" checked>
+                <label class="form-check-label" for="company">
+                    Юридическое лицо
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="IsCompany" id="nonCompany" value="false">
+                <label class="form-check-label" for="nonCompany">
+                    Физическое лицо
+                </label>
+            </div>
+            <div class="form-group">
+                <input class="form-control" asp-for="Email" placeholder="Email"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input class="form-control phone-number" asp-for="PhoneNumber" placeholder="Номер телефона"/>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input class="form-control" asp-for="Inn" placeholder="ИНН"/>
+                <span asp-validation-for="Inn" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-right">
+                <button type="submit" class="btn btn-danger btn-lg">Отправить</button>
+            </div>
+        </div>
+    </form>
 </div>
+
+@section head
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="~/js/feedback.js" asp-append-version="true"></script>
+}

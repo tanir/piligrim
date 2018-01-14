@@ -4,33 +4,22 @@ namespace Piligrim.Web.Controllers
 {
     public class ContentController : Controller
     {
-        [Route("content/{page}")]
-        public IActionResult Index(string page)
+        [Route("content/optovikam")]
+        public IActionResult WholeSalers()
         {
-            string view = null;
+            return this.View();
+        }
 
-            switch (page)
-            {
-                case "kak-sdelat-zakaz":
-                    view = "order";
-                    break;
-                case "dostavka":
-                    view = "delivery";
-                    break;
-                case "kak-oplatit-zakaz":
-                    view = "payment";
-                    break;
-                case "o-nas":
-                    view = "aboutus";
-                    break;
-            }
+        [Route("content/dostavka")]
+        public IActionResult Delivery()
+        {
+            return this.View();
+        }
 
-            if (string.IsNullOrEmpty(view))
-            {
-                return this.NotFound();
-            }
-
-            return this.View(view);
+        [Route("content/kak-oplatit-zakaz")]
+        public IActionResult Payment()
+        {
+            return this.View();
         }
     }
 }

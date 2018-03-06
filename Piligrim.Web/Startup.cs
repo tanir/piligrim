@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,6 +27,8 @@ namespace Piligrim.Web
     {
         public IConfiguration Configuration { get; set; }
 
+        private IHostingEnvironment environment { get; set; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -31,6 +38,8 @@ namespace Piligrim.Web
                 .AddEnvironmentVariables();
 
             this.Configuration = builder.Build();
+
+            this.environment = env;
 
             env.ConfigureNLog("nlog.config");
         }
@@ -47,12 +56,17 @@ namespace Piligrim.Web
             });
 
             services.Configure<AppSettings>(this.Configuration);
-
+            
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.LoginPath = new PathString("/Login/");
                 options.AccessDeniedPath = new PathString("/Login/Forbidden/");
             });
+
+            var keysPath = Path.Combine(this.environment.ContentRootPath, "keys");
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 
             services.AddMvc();
 

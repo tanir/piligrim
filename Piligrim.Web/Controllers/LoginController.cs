@@ -34,13 +34,15 @@ namespace Piligrim.Web.Controllers
             var props = new AuthenticationProperties
             {
                 IsPersistent = true,
-                ExpiresUtc = DateTime.UtcNow.AddMonths(1)
+                ExpiresUtc = DateTime.UtcNow.AddMonths(1),
+                AllowRefresh = true
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), props);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+                new ClaimsPrincipal(identity), props);
 
             return RedirectToAction("Index", "Home");
         }

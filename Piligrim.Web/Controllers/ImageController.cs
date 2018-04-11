@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using System;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
@@ -54,12 +55,12 @@ namespace Piligrim.Web.Controllers
                             }));
 
                             this.Response.RegisterForDispose(outputStream);
-                            image.SaveAsJpeg(outputStream);
+                            image.SaveAsPng(outputStream);
 
 
                             outputStream.Seek(0, SeekOrigin.Begin);
 
-                            return this.File(outputStream, "image/jpeg");
+                            return this.File(outputStream, "image/png");
                         }
                     }
                 }

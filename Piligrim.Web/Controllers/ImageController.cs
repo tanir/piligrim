@@ -56,7 +56,7 @@ namespace Piligrim.Web.Controllers
                             }));
 
                             this.Response.RegisterForDispose(outputStream);
-                            image.SaveAsPng(outputStream);
+                            image.SaveAsJpeg(outputStream, new JpegEncoder { Quality = 80 });
 
 
                             outputStream.Seek(0, SeekOrigin.Begin);

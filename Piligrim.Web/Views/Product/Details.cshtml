@@ -37,11 +37,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="fotorama" data-nav="thumbs" data-allowfullscreen="true">
-                        <img src="/image/400/400?url=@Model.Thumbnail" data-full="/image/1920/1080?url=@Model.Thumbnail" alt="@Model.Title" />
+                        <img src="/image/400/400?url=@Model.Thumbnail" data-full="/image/0/1080?url=@Model.Thumbnail" alt="@Model.Title" />
 
                         @foreach (var photo in Model.Photos)
                         {
-                            <img src="/image/400/400?url=@photo" data-full="/image/1920/1080?url=@photo" alt="@Model.Title" />
+                            <img src="/image/400/400?url=@photo" data-full="/image/0/1080?url=@photo" alt="@Model.Title" />
                         }
                     </div>
                 </div>

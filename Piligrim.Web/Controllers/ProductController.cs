@@ -45,7 +45,7 @@ namespace Piligrim.Web.Controllers
 
             var products = await this.productsRepository.Find(filter);
 
-            var model = products.Select(x => new ProductsListViewModel(x.Id, x.Thumbnail, x.Price, x.Title));
+            var model = products.Select(x => new ProductsListViewModel(x.Id, x.Thumbnail, x.Price, x.Title, x.Unit));
 
             return this.View(model);
         }

@@ -24,11 +24,11 @@
             <div class="panel">
                 <li class="list-group-item">
                     <a asp-controller="Product" target="_blank" asp-action="Details" asp-route-id="@product.Id">
-                        <img class="img-thumbnail" src="/image/145/115?url=@product.Thumbnail" alt="@product.Title" />
+                        <img class="img-thumbnail" src="/image/145/145?url=@product.Thumbnail" alt="@product.Title" />
                     </a>
                 </li>
                 <li class="list-group-item list-group-item-danger text-center">
-                    <b>@product.Price.ToString("0.00") <span class="fa fa-rub"></span></b>
+                    <b>@product.Price.ToString("0.00") <span class="fa fa-rub"></span>@(product.Unit != null ? $"/{product.Unit}" : string.Empty)</b>
                 </li>
                 <li class="list-group-item text-center">
                     <a target="_blank" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Title</a>

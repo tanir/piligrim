@@ -14,6 +14,8 @@ namespace Piligrim.Web.Controllers
 {
     public class ImageController : Controller
     {
+        private static readonly object sync = new object();
+
         private static readonly Size maxSize = new Size(1920, 1080);
 
         private readonly ILogger logger;
@@ -36,52 +38,57 @@ namespace Piligrim.Web.Controllers
                 return this.BadRequest();
             }
 
-            try
+            lock (sync)
             {
-                using (var stream = GetStream(url).Result)
+
+                try
                 {
-                    using (var image = Image.Load(stream))
+                    using (var stream = GetStream(url).Result)
                     {
-                        stream.Dispose();
-
-                        var outputStream = new MemoryStream();
-
-                        var restrictedPath = this.GetRestrictedPath(url);
-
-                        if (restrictedPath != null && (image.Width > maxSize.Width || image.Height > maxSize.Height))
+                        using (var image = Image.Load(stream))
                         {
-                            using (var clonedImage = image.Clone())
+                            stream.Dispose();
+
+                            var outputStream = new MemoryStream();
+
+                            var restrictedPath = this.GetRestrictedPath(url);
+
+                            if (restrictedPath != null &&
+                                (image.Width > maxSize.Width || image.Height > maxSize.Height))
                             {
-                                clonedImage.Mutate(x => x.Resize(new ResizeOptions
+                                using (var clonedImage = image.Clone())
                                 {
-                                    Mode = ResizeMode.Max,
-                                    Size = maxSize
-                                }));
+                                    clonedImage.Mutate(x => x.Resize(new ResizeOptions
+                                    {
+                                        Mode = ResizeMode.Max,
+                                        Size = maxSize
+                                    }));
 
-                                clonedImage.Save(restrictedPath);
+                                    clonedImage.Save(restrictedPath);
+                                }
                             }
+
+                            image.Mutate(x => x.Resize(new ResizeOptions
+                            {
+                                Mode = ResizeMode.Crop,
+                                Size = new Size { Width = width, Height = height }
+                            }));
+
+                            this.Response.RegisterForDispose(outputStream);
+                            image.SaveAsJpeg(outputStream, new JpegEncoder { Quality = 80 });
+
+
+                            outputStream.Seek(0, SeekOrigin.Begin);
+
+                            return this.File(outputStream, "image/png");
                         }
-
-                        image.Mutate(x => x.Resize(new ResizeOptions
-                        {
-                            Mode = ResizeMode.Crop,
-                            Size = new Size { Width = width, Height = height }
-                        }));
-
-                        this.Response.RegisterForDispose(outputStream);
-                        image.SaveAsJpeg(outputStream, new JpegEncoder { Quality = 80 });
-
-
-                        outputStream.Seek(0, SeekOrigin.Begin);
-
-                        return this.File(outputStream, "image/png");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
-                return this.StatusCode(500);
+                catch (Exception ex)
+                {
+                    this.logger.LogError(ex, $"Произошла ошибка при обработке изображения [{url} - {ex}]");
+                    return this.StatusCode(500);
+                }
             }
         }
 

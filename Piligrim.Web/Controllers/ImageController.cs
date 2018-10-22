@@ -7,8 +7,6 @@ using System;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
@@ -16,7 +14,8 @@ namespace Piligrim.Web.Controllers
 {
     public class ImageController : Controller
     {
-        private static readonly object sync = new object();
+        private static readonly Size maxSize = new Size(1920, 1080);
+
         private readonly ILogger logger;
         private readonly IHostingEnvironment env;
 
@@ -32,44 +31,57 @@ namespace Piligrim.Web.Controllers
 
         public IActionResult Index(string url, int width, int height, string mode)
         {
-            lock (sync)
+            if (string.IsNullOrEmpty(url))
             {
-                if (string.IsNullOrEmpty(url))
-                {
-                    return this.BadRequest();
-                }
+                return this.BadRequest();
+            }
 
-                try
+            try
+            {
+                using (var stream = GetStream(url).Result)
                 {
-                    using (var stream = GetStream(url).Result)
+                    using (var image = Image.Load(stream))
                     {
-                        using (var image = Image.Load(stream))
+                        stream.Dispose();
+
+                        var outputStream = new MemoryStream();
+
+                        var restrictedPath = this.GetRestrictedPath(url);
+
+                        if (restrictedPath != null && (image.Width > maxSize.Width || image.Height > maxSize.Height))
                         {
-                            stream.Dispose();
-
-                            var outputStream = new MemoryStream();
-
-                            image.Mutate(x => x.Resize(new ResizeOptions
+                            using (var clonedImage = image.Clone())
                             {
-                                Mode = ResizeMode.Crop,
-                                Size = new Size { Width = width, Height = height }
-                            }));
+                                clonedImage.Mutate(x => x.Resize(new ResizeOptions
+                                {
+                                    Mode = ResizeMode.Max,
+                                    Size = maxSize
+                                }));
 
-                            this.Response.RegisterForDispose(outputStream);
-                            image.SaveAsJpeg(outputStream, new JpegEncoder { Quality = 80 });
-
-
-                            outputStream.Seek(0, SeekOrigin.Begin);
-
-                            return this.File(outputStream, "image/png");
+                                clonedImage.Save(restrictedPath);
+                            }
                         }
+
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Crop,
+                            Size = new Size { Width = width, Height = height }
+                        }));
+
+                        this.Response.RegisterForDispose(outputStream);
+                        image.SaveAsJpeg(outputStream, new JpegEncoder { Quality = 80 });
+
+
+                        outputStream.Seek(0, SeekOrigin.Begin);
+
+                        return this.File(outputStream, "image/png");
                     }
                 }
-                catch (Exception ex)
-                {
-                    this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
-                    return this.StatusCode(500);
-                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(0, ex, $"Произошла ошибка при обработке изображения [{url}]");
+                return this.StatusCode(500);
             }
         }
 
@@ -88,6 +100,13 @@ namespace Piligrim.Web.Controllers
             {
                 var path = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
 
+                var restrictedSizePath = this.GetRestrictedPath(url);
+
+                if (restrictedSizePath != null && System.IO.File.Exists(restrictedSizePath))
+                {
+                    path = restrictedSizePath;
+                }
+
                 using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous))
                 {
                     var result = new MemoryStream();
@@ -99,6 +118,18 @@ namespace Piligrim.Web.Controllers
                     return result;
                 }
             }
+        }
+
+        [NonAction]
+        private string GetRestrictedPath(string url)
+        {
+            var sourceFileName = Path.Combine(this.env.WebRootPath, url.Trim('/').Replace("/", "\\"));
+            var withoutExtension = Path.GetFileNameWithoutExtension(sourceFileName);
+            var extension = Path.GetExtension(sourceFileName);
+
+            return url.StartsWith("http")
+                ? null
+                : Path.Combine(Path.GetDirectoryName(sourceFileName), $"{withoutExtension}_{maxSize.Width}x{maxSize.Height}{extension}");
         }
     }
 }

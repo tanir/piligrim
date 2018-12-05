@@ -86,3 +86,8 @@
 [data-toggle] .caret-closed {
     display: none;
 }
+
+.product-details .label {
+    display: inline-block;
+    padding: .3em .6em;
+}

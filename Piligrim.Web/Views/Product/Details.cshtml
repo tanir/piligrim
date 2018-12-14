@@ -59,9 +59,9 @@
             <h2>
                 <span class="label label-danger">@Model.Price.ToString("0.00") <span class="fa fa-rub"></span>@(Model.Unit != null ? $"/{Model.Unit}" : string.Empty)</span>
             </h2>
-            <h4>
+            <p class="min-price">
                <strong>Минимальная сумма заказа 3000 рублей</strong>
-            </h4>
+            </p>
 
             <form class="form-horizontal add-order-form" data-bind="submit: function(){ if(!$('form.add-order-form').valid()) { return; } $('#cart-modal').modal(); addOrderItem();}">
                 <input type="hidden" name="thumbnail" value="@Model.Thumbnail" />
